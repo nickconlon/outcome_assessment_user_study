@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Welcome to the tutorial!{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div>
+    Hello from the tutorial.
+  </div>
+
+  {% if g.user %}
+    <a class="action" href="{{ url_for('gridworld_app.practicegame') }}">Start Practice</a>
+  {% endif %}
+{% endblock %}

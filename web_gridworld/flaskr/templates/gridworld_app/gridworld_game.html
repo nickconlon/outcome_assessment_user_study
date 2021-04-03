@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Agent Game</title>
+  </head>
+
+  <body>
+
+    <div id="dialog">Confidence:</div>
+    <div id="state">State:</div>
+    <div id="buttons">
+      <button onclick="humanDrive()">Human Drive</button>
+      <button onclick="agentDrive()">Agent Drive</button>
+      <button onclick="abortMission()">Abort</button>
+    </div>
+
+      <div id="map">
+      <canvas id="current_map" width="600" height="140"></canvas>
+      </div>
+
+    <div style="text-align:center">
+      <button onclick="manual_move({keyCode:38})">up</button>
+    </div>
+    <div style="text-align:center">
+      <button onclick="manual_move({keyCode:37})">left</button>
+      <button onclick="manual_move({keyCode:39})">right</button>
+    </div>
+    <div style="text-align:center">
+      <button onclick="manual_move({keyCode:40})">down</button>
+    </div>
+    <style>
+
+      #map {
+        text-align: center;
+      }
+
+      #dialog {
+        padding-top: 10%;
+        text-align: left;
+        font-size: 20px;
+        padding-left: 80px;
+      }
+      #state {
+        text-align: left;
+        font-size: 20px;
+        padding-left: 80px;
+      }
+      #buttons {
+        text-align: center;
+        font-size: 20px;
+      }
+    </style>
+  </body>
+
+  <script src="http://code.jquery.com/jquery.min.js"></script>
+  <script type="text/javascript">
+
+    // stuff from the server to setup the board.
+    const s_data = JSON.parse('{{ start_data | tojson | safe}}')
+    const confidence = s_data['conf']
+    const agent_location = s_data['agent']
+    const goal_location = s_data['goal']
+    const ob_locs = s_data['obstacles']
+    const danger_locs = s_data['dangers']
+    const randomizers = s_data['randomizers']
+
+    // board constants.
+    const board_border = 'black';
+    const board_background = "white";
+    const agent_color = 'lightblue';
+    const agent_border = 'darkblue';
+    const cell_size = 20
+    const sensor_fov = cell_size
+    const map_width = 30
+    const map_height = 7
+
+    // keep track of the board throughout play
+    // x = i % width;
+    // y = i / width;
+    const CLEAR = 0
+    const OBSTACLE = 1
+    const GLASS = 2
+    const HOLE = 3
+    const local_map = new Array(map_height*map_width).fill(0);
+
+    // 0 is black
+    // 1 is visible
+    const visible_map = new Array(map_height*map_width).fill(0);
+
+    // save the obstacle locations
+    for (i=0; i<ob_locs.length; i++) {
+      ii = ob_locs[i][0] + map_width*(ob_locs[i][1])
+      local_map[ii] = OBSTACLE
+    }
+
+    // save the hole locations
+    for (i=0; i<danger_locs.length; i++) {
+      ii = danger_locs[i][0] + map_width*(danger_locs[i][1])
+      local_map[ii] = HOLE
+    }
+
+    // save the glass locations
+    for (i=0; i<randomizers.length; i++) {
+      ii = randomizers[i][0] + map_width*(randomizers[i][1])
+      local_map[ii] = GLASS
+    }
+
+    // save the agent and goal locations
+    var agent = {x: agent_location[0]*cell_size, y: agent_location[1]*cell_size}
+    const goal = [{x: goal_location[0]*cell_size, y:goal_location[1]*cell_size}]
+    var segment = 0
+
+    //
+    // Data to save and return to db
+    //
+    var number_human_moves = 0
+    var number_agent_moves = 0
+    var game_outcome = ""
+    var total_mission_time = new Date().getTime()
+    var total_mission_steps = 0
+    var number_interventions = 0
+    var number_steps_during_intervention = 0
+    var intervention_location = []
+
+    // 0=right, 1=left, 2=up, 3=down
+    const actions = [{x: cell_size, y:0}, {x: -cell_size, y:0}, {x:0, y:-cell_size}, {x:0, y:cell_size}]
+
+    // game states
+    const AGENT = 0
+    const HUMAN = 1
+    const ABORT = 2
+    const START = -1
+    var state = START
+
+    // velocities. horizontal has a cell_size offset.
+    let dx = cell_size;
+    let dy = 0;
+
+    // Get the canvas element
+    const grid_board = document.getElementById("current_map");
+    // Return a two dimensional drawing context
+    const grid_board_ctx = grid_board.getContext("2d");
+
+    // Start the game
+    main();
+    agent_sense();
+    redraw();
+    document.getElementById('dialog').innerHTML = 'Confidence: ' + s_data['conf']
+    document.addEventListener("keydown", manual_move);
+
+    //
+    // main function called repeatedly to keep the game running
+    //
+    function main() {
+        ended = has_game_ended()
+        if (ended.status) {
+
+          // gather stuff to return to the database.
+          console.log({'human': number_human_moves, 'agent': number_agent_moves})
+          total_mission_time = (new Date().getTime() - total_mission_time)/1000
+          total_mission_time = Math.round(total_mission_time)
+          game_outcome = ended.outcome
+          var postData = {
+            human: number_human_moves,
+            agent: number_agent_moves,
+            outcome: game_outcome,
+            t_mission_time: total_mission_time,
+            t_mission_steps: total_mission_steps,
+            n_interventions: number_interventions,
+            n_steps_interventions: number_steps_during_intervention,
+            intervention_loc: intervention_location
+          }
+
+          // POST data to the server
+          fetch('/endgame', {
+              headers: {'Content-Type': 'application/json'}, // Declare what type of data we're sending
+              method: 'POST', // Specify the method
+              body: JSON.stringify({postData}) // A JSON payload
+          }).then(function(res){
+          console.log(res)
+          window.location.href = res.url;
+          });
+        }
+
+        move_time = 100
+        if (state === AGENT) {
+          drive_agent("random")
+          move_time = 100
+        }
+        else if (state === HUMAN) {
+          number_steps_during_intervention ++
+          move_time = 100
+        }
+
+        setTimeout(function onTick() {
+        redraw()
+        main(); // Repeat
+      }, move_time)
+    }
+
+    //
+    // Allow the human to drive.
+    //
+    function humanDrive() {
+      if(state == AGENT || state == START) {
+        number_interventions ++
+        intervention_location.push([agent.x/cell_size, agent.y/cell_size])
+      }
+      document.getElementById("state").innerHTML = "State: " + "Human Driving";
+      state = HUMAN
+    }
+
+    //
+    // Allow the agent to drive.
+    //
+    function agentDrive() {
+      if(state == HUMAN) {
+        intervention_location.push([agent.x/cell_size, agent.y/cell_size])
+      }
+      document.getElementById("state").innerHTML = "State: " + "Agent Driving";
+      state = AGENT
+    }
+
+    //
+    // Abort the mission.
+    //
+    function abortMission() {
+      document.getElementById("state").innerHTML = "State: " + "Abort Mission";
+      state = ABORT
+    }
+
+    //
+    // Redraw the board including agent and goal positions.
+    //
+    function redraw() {
+      // draw a border around the board
+      grid_board_ctx.fillStyle = 'black';
+      grid_board_ctx.strokestyle = board_border;
+      grid_board_ctx.fillRect(0, 0, grid_board.width, grid_board.height);
+      grid_board_ctx.strokeRect(0, 0, grid_board.width, grid_board.height);
+
+      // redraw all the objects on the board
+      for(let i=0; i<map_width*map_height; i++) {
+        if(visible_map[i] == 1) {
+          xx = Math.floor(i % map_width)
+          yy = Math.floor(i / map_width)
+          if (local_map[i] == 1) {
+            grid_board_ctx.fillStyle = 'gray';
+            grid_board_ctx.strokestyle = 'black';
+            grid_board_ctx.fillRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+            grid_board_ctx.strokeRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+          }
+          else if (local_map[i] == 2) {
+            grid_board_ctx.fillStyle = 'yellow';
+            grid_board_ctx.strokestyle = 'black';
+            grid_board_ctx.fillRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+            grid_board_ctx.strokeRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+          }
+          else
+          {
+            grid_board_ctx.fillStyle = board_background;
+            grid_board_ctx.strokestyle = board_border;
+            grid_board_ctx.fillRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+          }
+        }
+      }
+      drawGoal()
+      drawAgent()
+    }
+
+    //
+    // Draw the goal(s).
+    //
+    function drawGoal() {
+      grid_board_ctx.fillStyle = 'lightgreen';
+      grid_board_ctx.strokestyle = 'darkgreen';
+      for(let i=0; i<goal.length; i++)
+      {
+        grid_board_ctx.fillRect(goal[i].x, goal[i].y, cell_size, cell_size);
+        grid_board_ctx.strokeRect(goal[i].x, goal[i].y, cell_size, cell_size);
+      }
+    }
+
+    //
+    // Draw the agent.
+    //
+    function drawAgent() {
+      grid_board_ctx.fillStyle = agent_color;
+      grid_board_ctx.strokestyle = agent_border;
+      grid_board_ctx.fillRect(agent.x, agent.y, cell_size, cell_size);
+      grid_board_ctx.strokeRect(agent.x, agent.y, cell_size, cell_size);
+    }
+
+    //
+    // Check for any collisions and return collision type.
+    //
+    function check_collision(a, type) {
+      i = a.x/cell_size + 30*(a.y/cell_size)
+      return (local_map[i] == type)
+    }
+
+    //
+    // Check if the game has ended and return the outcome and end type.
+    //
+    function has_game_ended() {
+      let dead = false
+      if(check_collision(agent, HOLE))
+      {
+        dead = true
+      }
+      let found_goal = (agent.x === goal[segment].x && agent.y === goal[segment].y)
+      if (found_goal) {
+        segment++;
+        if (segment < goal.length) {
+          found_goal = false
+        }
+        else {
+          segment = 0
+        }
+      }
+      let status = found_goal || dead || (state == ABORT)
+      let outcome = ""
+      outcome = found_goal ? "GOAL" : outcome
+      outcome = dead ? "DEAD" : outcome
+      outcome = (state == ABORT) ? "ABORT" : outcome
+      ret = {status, outcome}
+      return ret
+    }
+
+    //
+    // Keyboard control of the agent.
+    //
+    function manual_move(event) {
+      const LEFT_KEY = 37;
+      const RIGHT_KEY = 39;
+      const UP_KEY = 38;
+      const DOWN_KEY = 40;
+
+      if (state !== HUMAN) return;
+      const keyPressed = event.keyCode;
+
+      let action = -1 // 0=right, 1=left, 2=up, 3=down
+      if (keyPressed === LEFT_KEY) {
+        action = 1;
+      }
+      if (keyPressed === UP_KEY) {
+        action = 2;
+      }
+      if (keyPressed === RIGHT_KEY) {
+        action =0;
+      }
+      if (keyPressed === DOWN_KEY) {
+       action = 3;
+      }
+
+      if (action >= 0)
+      {
+        dx = actions[action].x;
+        dy = actions[action].y;
+        number_human_moves += 1;
+        move_agent();
+      }
+    }
+
+    //
+    // Move the agent in some direction by dx, dy.
+    //
+    function move_agent() {
+      total_mission_steps ++
+      const head = {x: agent.x + dx, y: agent.y + dy};
+
+      // Randomly move the agent around if it hits glassy area
+      if (state == AGENT) {
+        if(check_collision(head, GLASS))
+        {
+          if (Math.random() > 0.2) {
+            if (Math.random() > 0.5) {
+              head.x = head.x - cell_size
+            } else {
+              head.x = head.x + cell_size
+            }
+          }
+          if (Math.random() > 0.2){
+            if (Math.random() > 0.5){
+              head.y = head.y-cell_size
+            }
+            else{
+              head.y = head.y+cell_size
+            }
+          }
+        }
+      }
+      if(check_collision(head, OBSTACLE))
+      {
+        return;
+      }
+      if (head.x < 0 || head.x > grid_board.width-cell_size || head.y < 0 || head.y > grid_board.height-cell_size)
+      {
+        return;
+      }
+      agent.x = head.x
+      agent.y = head.y
+
+      i = agent.x/cell_size + 30*(agent.y/cell_size)
+      visible_map[i]=1
+      agent_sense()
+    }
+
+    //
+    // Allow the agent to sense (make some parts of the map permanently visible).
+    //
+    function agent_sense() {
+      // agent position
+      xx = agent.x
+      yy = agent.y
+      for(i=-sensor_fov/cell_size; i<sensor_fov/cell_size+1; i++){
+        for(j=-sensor_fov/cell_size; j<sensor_fov/cell_size+1; j++){
+          xxx = xx+i*cell_size
+          yyy = yy+j*cell_size
+          if( (xxx >= 0 && xxx < map_width*cell_size) && (yyy >=0 && yyy < map_height*cell_size) )
+          {
+            ii = xxx/cell_size+ map_width*(yyy/cell_size)
+            visible_map[ii]=1
+          }
+        }
+      }
+    }
+
+    //
+    // Drive the agent somewhere.
+    //
+    function drive_agent(type) {
+      number_agent_moves += 1;
+      let x_diff = agent.x - goal[segment].x
+      let y_diff = agent.y - goal[segment].y
+
+      if (type === "straight")
+      {
+        if (x_diff !== 0)
+        {
+          dx = ( x_diff < 0) ? cell_size : -cell_size
+          dy = 0
+          move_agent();
+        }
+        if (y_diff !== 0)
+        {
+          dy = ( y_diff < 0) ? cell_size : -cell_size
+          dx = 0
+          move_agent();
+        }
+      }
+      else if (type === "random")
+      {
+        let action = epsilon_greedy(0.2)
+        dx = action.x
+        dy = action.y
+        move_agent()
+      }
+
+    }
+
+    //
+    // Dumb epsilon greed driving algorithm.
+    //
+    function epsilon_greedy(eps) {
+      let p = Math.random()
+      if (p < eps)
+      {
+        let action = Math.floor(Math.random() * 4);
+        return actions[action]
+      }
+      else
+      {
+        let x_diff = agent.x - goal[segment].x
+        let y_diff = agent.y - goal[segment].y
+        if (Math.abs(x_diff) > Math.abs(y_diff))
+        {
+          return {x: ( x_diff < 0) ? cell_size : -cell_size, y: 0}
+        }
+        else
+        {
+          return {x: 0, y: ( y_diff < 0) ? cell_size : -cell_size}
+        }
+      }
+    }
+
+    
+  </script>
+</html>
