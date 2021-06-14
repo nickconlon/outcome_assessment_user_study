@@ -1,7 +1,7 @@
 oooooooooooooooooooooooooooooo
 oa-rrrrrr---------rrrrrr-----o
-o--rrrr----------------------o
-o--ooooooooo--ooooooo---oooooo
+o--orrr----------orr---------o
+o--ooooooooo--ooooooo--ooooooo
 o-------------o--------------o
-o-------------o-------------go
+o-------------o-------------Go
 oooooooooooooooooooooooooooooo

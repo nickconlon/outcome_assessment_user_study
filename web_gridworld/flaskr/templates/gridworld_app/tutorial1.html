@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+  {% block header %}
+    <h1>{% block title %}Welcome to the tutorial{% endblock %}</h1>
+  {% endblock %}
+
+  {% block content %}
+  <div>
+    <h2>Hello!</h2>
+  </div>
+  <div>
+      You have been teamed with a new robot. This robot is capable of sending you a report telling you it's <b>self-confidence</b>
+      in navigating (in Automatic Mode) to the finish. This statement is the robots estimate of how well it thinks it will
+      perform. You may use it to inform your decision on Manual Control vs. Automatic Control. Note the addition of the
+      <b>self-confidence</b> report above the map.
+  </div>
+    <div style="text-align:center">
+      <img src="static/images/control_panel_1.png" alt="" />
+    </div>
+
+    <h3>Scoring</h3>
+    Scoring is the same for all mazes.
+
+  <h2>Please start the next round</h2>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('gridworld_app.playgame') }}" style="font-size: 40px">Start</a>
+  {% endif %}
+{% endblock %}

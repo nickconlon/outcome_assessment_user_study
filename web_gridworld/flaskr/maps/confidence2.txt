@@ -1,0 +1,1 @@
+<b>Report:</b> The robot has <b>high confidence</b> in navigating to the blue square, and <b>low confidence</b> in navigating from the blue square to the green square.

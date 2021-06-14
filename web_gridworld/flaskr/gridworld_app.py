@@ -34,14 +34,33 @@ def practicegame():
 @bp.route('/playgame', methods=('GET', 'POST'))
 @login_required
 def playgame():
-    print("Hello world")
-    confidence = ["N/A",
-                  "The agent has low confidence in driving from the current position to the green square",
-                  "The agent has high confidence in driving from the current position to the green square"]
+    colors = ['red', 'green', 'blue']
+    map_number = 0
+    db = get_db()
+    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
+    if u[1] == -1:
+        db = get_db()
+        db.execute('UPDATE user SET run_counter = 0 WHERE id = ?', (g.user['id'],))
+        db.commit()
+        map_number = 0
+    else:
+        map_number = u[1]
+    #if u is not None and len(u) >= 2:
+    #    map_number = u[1] % 3
+    confidence = ""
+
+    with open("flaskr/maps/confidence"+str(map_number)+".txt") as file:
+        for line in file.readlines():
+            confidence = line.strip()
+            break
+
+    confidence = confidence.replace('robot', '<u>'+colors[map_number]+' robot</u>')
     obstacles = []
     dangers = []
     randomizers = []
-    with open("flaskr/maps/map.txt") as file:
+    subgoal = []
+    goal = []
+    with open("flaskr/maps/map"+str(map_number)+".txt") as file:
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
                 if c == 'o':
@@ -50,18 +69,21 @@ def playgame():
                     randomizers.append([x,y])
                 if c == 'd':
                     dangers.append([x,y])
-                if c == 'g':
+                if c == 'G':
                     goal = [x, y]
+                if c == 'g':
+                    subgoal = [x, y]
                 if c == 'a':
                     agent = [x, y]
-
     data = {
-        'conf': confidence[np.random.randint(0,2)],
+        'conf': confidence,
         'goal': goal,
+        'subgoal': subgoal,
         'agent': agent,
         'obstacles': obstacles,
         'dangers': dangers,
-        'randomizers': randomizers
+        'randomizers': randomizers,
+        'robot_color': colors[map_number]
     }
     return render_template('gridworld_app/gridworld_game.html', start_data=data)
 
@@ -74,19 +96,46 @@ def endgame():
         js = js['postData']
         print("RECEIVED :" + str(js))
         db = get_db()
+        run_number = 55
+        run_level = 876
         db.execute(
             'INSERT INTO results '
-            '(user_id, h_score, a_score,  outcome, tot_mission_time_s, tot_mission_steps, num_interventions, num_steps_interventions, intervention_locations) '
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            (g.user['id'], js['human'], js['agent'], js['outcome'], js['t_mission_time'], js['t_mission_steps'], js['n_interventions'], js['n_steps_interventions'], str(js['intervention_loc']))
+            '(user_id, h_score, a_score,  outcome, tot_mission_time_s, tot_mission_steps, num_interventions, num_steps_interventions, intervention_locations, run_number, level_number) '
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)',
+            (g.user['id'], js['human'], js['agent'], js['outcome'], js['t_mission_time'],
+             js['t_mission_steps'], js['n_interventions'], js['n_steps_interventions'], str(js['intervention_loc']),
+             run_number, run_level)
         )
         db.commit()
-    return redirect(url_for('gridworld_app.index'))
+
+        db = get_db()
+        db.execute('UPDATE user SET run_counter = run_counter+1 WHERE id = ?', (g.user['id'],))
+        db.commit()
+
+    db = get_db()
+    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
+    print("U " + str(u[1]))
+    if u[1] == 1:
+        post = {}
+        return render_template('gridworld_app/tutorial1.html', post=post)
+    elif u[1] == 2:
+        post = {}
+        return render_template('gridworld_app/tutorial2.html', post=post)
+    if u[1] > 2 or u[1] == -1:
+        # TODO delete me
+        db = get_db()
+        db.execute('UPDATE user SET run_counter = -1 WHERE id = ?', (g.user['id'],))
+        db.commit()
+        post = {}
+        return render_template('gridworld_app/thank_you.html', post=post)
+
+    else:
+        return playgame()
 
 
-@bp.route('/tutorial', methods=('GET', 'POST'))
+@bp.route('/base_tutorial', methods=('GET', 'POST'))
 @login_required
-def tutorial():
+def base_tutorial():
     post = {'title': 'tutorial'}
-    return render_template('gridworld_app/tutorial.html', post=post)
+    return render_template('gridworld_app/base_tutorial.html', post=post)
 

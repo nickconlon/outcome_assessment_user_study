@@ -5,45 +5,61 @@
   </head>
 
   <body>
-
-    <div id="dialog">Confidence:</div>
-    <div id="state">State:</div>
-    <div id="buttons">
-      <button onclick="humanDrive()">Human Drive</button>
-      <button onclick="agentDrive()">Agent Drive</button>
-      <button onclick="abortMission()">Abort</button>
+    <div id="title" style="text-align:center">
+          <div><b>Work with the robot and navigate to the green square. Ready, go!</b></div>
     </div>
+    <div style="font-size: 24px" id="dialog"></div>
+
 
       <div id="map">
       <canvas id="current_map" width="600" height="140"></canvas>
       </div>
 
-    <div style="text-align:center">
-      <button onclick="manual_move({keyCode:38})">up</button>
+    <div id="buttons">
+      <button id="h_button" style="font-size: 24px" onclick="humanDrive()">Manual Control</button>
+      <button id="r_button"  style="font-size: 24px" onclick="agentDrive()">Automatic Control</button>
+      <button id="a_button"  style="font-size: 24px" onclick="abortMission()">Abort Mission</button>
     </div>
     <div style="text-align:center">
-      <button onclick="manual_move({keyCode:37})">left</button>
-      <button onclick="manual_move({keyCode:39})">right</button>
+      <button style="font-size: 24px" onclick="manual_move({keyCode:38})">Up</button>
     </div>
     <div style="text-align:center">
-      <button onclick="manual_move({keyCode:40})">down</button>
+      <button style="font-size: 24px" onclick="manual_move({keyCode:37})">Left</button>
+      <button style="font-size: 24px" onclick="manual_move({keyCode:39})">Right</button>
+    </div>
+    <div style="text-align:center">
+      <button style="font-size: 24px" onclick="manual_move({keyCode:40})">Down</button>
+    </div>
+    <div style="display:none;">
+       <img id="robot_red" src="/static/images/robot_red.png" alt="robots">
+       <img id="robot_green" src="/static/images/robot_green.png" alt="robots">
+       <img id="robot_blue" src="/static/images/robot_purple.png" alt="robots">
+       <!--img id="goal" src="/static/images/goal.png" alt="goal">
+       <img id="subgoal" src="/static/images/green_flag.png" alt="goal"-->
+       <img id="glass" src="/static/images/glass.png" alt="glass">
+       <img id="hole" src="/static/images/hole.png" alt="glass">
     </div>
     <style>
+
+
+      #title {
+        text-align: center;
+        padding-top: 10%;
+        text-align: left;
+        font-size: 40px;
+        padding-left: 80px;
+      }
 
       #map {
         text-align: center;
       }
 
       #dialog {
-        padding-top: 10%;
-        text-align: left;
+        padding-top: 5%;
+        text-align: center;
         font-size: 20px;
         padding-left: 80px;
-      }
-      #state {
-        text-align: left;
-        font-size: 20px;
-        padding-left: 80px;
+        padding-bottom: 20px;
       }
       #buttons {
         text-align: center;
@@ -60,9 +76,11 @@
     const confidence = s_data['conf']
     const agent_location = s_data['agent']
     const goal_location = s_data['goal']
+    const subgoal_location = s_data['subgoal']
     const ob_locs = s_data['obstacles']
     const danger_locs = s_data['dangers']
     const randomizers = s_data['randomizers']
+    const robot_color = s_data['robot_color']
 
     // board constants.
     const board_border = 'black';
@@ -73,6 +91,11 @@
     const sensor_fov = cell_size
     const map_width = 30
     const map_height = 7
+
+    //const policy = new Array(map_height*map_width).fill(0);
+    const policy =
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 0, 0, 1, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 
     // keep track of the board throughout play
     // x = i % width;
@@ -108,6 +131,12 @@
     // save the agent and goal locations
     var agent = {x: agent_location[0]*cell_size, y: agent_location[1]*cell_size}
     const goal = [{x: goal_location[0]*cell_size, y:goal_location[1]*cell_size}]
+
+    var subgoal = []
+    console.log(subgoal_location)
+    for(i=0; i<subgoal_location.length; i++) {
+      subgoal = [{x: subgoal_location[0]*cell_size, y:subgoal_location[1]*cell_size}]
+    }
     var segment = 0
 
     //
@@ -123,13 +152,16 @@
     var intervention_location = []
 
     // 0=right, 1=left, 2=up, 3=down
-    const actions = [{x: cell_size, y:0}, {x: -cell_size, y:0}, {x:0, y:-cell_size}, {x:0, y:cell_size}]
+    //const actions = [{x: cell_size, y:0}, {x: -cell_size, y:0}, {x:0, y:-cell_size}, {x:0, y:cell_size}]
+   // # [left, right, up, down]
+    const actions = [{x: -cell_size, y:0}, {x: cell_size, y:0}, {x:0, y:-cell_size}, {x:0, y:cell_size}]
 
     // game states
     const AGENT = 0
     const HUMAN = 1
     const ABORT = 2
     const START = -1
+    const DONE = 3
     var state = START
 
     // velocities. horizontal has a cell_size offset.
@@ -145,7 +177,7 @@
     main();
     agent_sense();
     redraw();
-    document.getElementById('dialog').innerHTML = 'Confidence: ' + s_data['conf']
+    document.getElementById('dialog').innerHTML = confidence
     document.addEventListener("keydown", manual_move);
 
     //
@@ -153,8 +185,8 @@
     //
     function main() {
         ended = has_game_ended()
-        if (ended.status) {
-
+        if (ended.status & !(state === DONE)) {
+          state = DONE
           // gather stuff to return to the database.
           console.log({'human': number_human_moves, 'agent': number_agent_moves})
           total_mission_time = (new Date().getTime() - total_mission_time)/1000
@@ -184,7 +216,7 @@
 
         move_time = 100
         if (state === AGENT) {
-          drive_agent("random")
+          drive_agent("policy")
           move_time = 100
         }
         else if (state === HUMAN) {
@@ -206,7 +238,9 @@
         number_interventions ++
         intervention_location.push([agent.x/cell_size, agent.y/cell_size])
       }
-      document.getElementById("state").innerHTML = "State: " + "Human Driving";
+      document.getElementById("h_button").style.background = 'green';
+      document.getElementById("r_button").style.background = 'lightgrey';
+      document.getElementById("a_button").style.background = 'lightgrey';
       state = HUMAN
     }
 
@@ -217,7 +251,9 @@
       if(state == HUMAN) {
         intervention_location.push([agent.x/cell_size, agent.y/cell_size])
       }
-      document.getElementById("state").innerHTML = "State: " + "Agent Driving";
+      document.getElementById("h_button").style.background = 'lightgrey';
+      document.getElementById("r_button").style.background = 'green';
+      document.getElementById("a_button").style.background = 'lightgrey';
       state = AGENT
     }
 
@@ -225,7 +261,9 @@
     // Abort the mission.
     //
     function abortMission() {
-      document.getElementById("state").innerHTML = "State: " + "Abort Mission";
+      document.getElementById("h_button").style.background = 'lightgrey';
+      document.getElementById("r_button").style.background = 'lightgrey';
+      document.getElementById("a_button").style.background = 'green';
       state = ABORT
     }
 
@@ -251,10 +289,20 @@
             grid_board_ctx.strokeRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
           }
           else if (local_map[i] == 2) {
-            grid_board_ctx.fillStyle = 'yellow';
-            grid_board_ctx.strokestyle = 'black';
-            grid_board_ctx.fillRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
-            grid_board_ctx.strokeRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+            //grid_board_ctx.fillStyle = 'yellow';
+            //grid_board_ctx.strokestyle = 'black';
+            //grid_board_ctx.fillRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+            //grid_board_ctx.strokeRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+            const image = document.getElementById('glass');
+            grid_board_ctx.drawImage(image, xx*cell_size, yy*cell_size, cell_size, cell_size);
+          }
+          else if (local_map[i] == 3) {
+            //grid_board_ctx.fillStyle = 'black';
+            //grid_board_ctx.strokestyle = 'black';
+            //grid_board_ctx.fillRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+            //grid_board_ctx.strokeRect(xx*cell_size, yy*cell_size, cell_size, cell_size);
+            const image = document.getElementById('hole');
+            grid_board_ctx.drawImage(image, xx*cell_size, yy*cell_size, cell_size, cell_size);
           }
           else
           {
@@ -272,23 +320,34 @@
     // Draw the goal(s).
     //
     function drawGoal() {
-      grid_board_ctx.fillStyle = 'lightgreen';
+      grid_board_ctx.fillStyle = 'green';
       grid_board_ctx.strokestyle = 'darkgreen';
       for(let i=0; i<goal.length; i++)
       {
         grid_board_ctx.fillRect(goal[i].x, goal[i].y, cell_size, cell_size);
         grid_board_ctx.strokeRect(goal[i].x, goal[i].y, cell_size, cell_size);
       }
+
+      grid_board_ctx.fillStyle = 'blue';
+      grid_board_ctx.strokestyle = 'darkblue';
+      for(let i=0; i<subgoal.length; i++)
+      {
+        grid_board_ctx.fillRect(subgoal[i].x, subgoal[i].y, cell_size, cell_size);
+        grid_board_ctx.strokeRect(subgoal[i].x, subgoal[i].y, cell_size, cell_size);
+      }
+
     }
 
     //
     // Draw the agent.
     //
     function drawAgent() {
-      grid_board_ctx.fillStyle = agent_color;
-      grid_board_ctx.strokestyle = agent_border;
-      grid_board_ctx.fillRect(agent.x, agent.y, cell_size, cell_size);
-      grid_board_ctx.strokeRect(agent.x, agent.y, cell_size, cell_size);
+      //grid_board_ctx.fillStyle = agent_color;
+      //grid_board_ctx.strokestyle = agent_border;
+      //grid_board_ctx.fillRect(agent.x, agent.y, cell_size, cell_size);
+      //grid_board_ctx.strokeRect(agent.x, agent.y, cell_size, cell_size);
+      const image = document.getElementById('robot_'+ robot_color);
+      grid_board_ctx.drawImage(image, agent.x, agent.y, cell_size, cell_size);
     }
 
     //
@@ -341,13 +400,13 @@
 
       let action = -1 // 0=right, 1=left, 2=up, 3=down
       if (keyPressed === LEFT_KEY) {
-        action = 1;
+        action = 0;
       }
       if (keyPressed === UP_KEY) {
         action = 2;
       }
       if (keyPressed === RIGHT_KEY) {
-        action =0;
+        action =1;
       }
       if (keyPressed === DOWN_KEY) {
        action = 3;
@@ -456,6 +515,14 @@
         dy = action.y
         move_agent()
       }
+      else if (type === "policy")
+      {
+        let action = test_policy()
+        dx = action.x
+        dy = action.y
+        move_agent()
+
+      }
 
     }
 
@@ -482,6 +549,13 @@
           return {x: 0, y: ( y_diff < 0) ? cell_size : -cell_size}
         }
       }
+    }
+
+    function test_policy() {
+    ii = agent.x/cell_size+ map_width*(agent.y/cell_size)
+    console.log(actions[policy[ii]])
+    return actions[policy[ii]]
+
     }
 
     

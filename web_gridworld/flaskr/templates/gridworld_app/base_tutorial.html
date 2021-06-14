@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+  <div>
+    <h2>Hello!</h2>
+  </div>
+  <div>
+    We are interested in studying how a human and a robot counterpart can solve a navigation task together. Here you will be faced
+    with a set of mazes of varying difficulty and paired with a robot of varying capability. You will have the option of
+    driving the robot, or letting the robot automatically drive. There will be dangers in the maze which you will need to
+    avoid. Your view of the mazes, and control you have of the robot will be limited, so you must work together with your
+    new robot partner. There will be three sets of mazes in total, each with a new robot. Each new set of mazes will be
+    preceded by a short tutorial to help you get to know your new robot partner. Your job is to work with the robot to
+    safely navigate through each maze from start to finish.
+  </div>
+  <div>
+    <h3>Control Panel</h3>
+    You will be presented with a control panel to help navigate the maze. Below is an annotated image of it:
+    <div style="text-align:center">
+      <img src="static/images/control_panel.png" alt="" />
+    </div>
+
+    In the center is the map. The robot will start around the upper left corner. The finish is a green square which could
+    be located anywhere on the map. The finish will always be a visible to you and the robot. The robot will always be
+    visible and be one of three colors (red, blue, or green). The 8 square surrounding the robot are visible as well as
+    areas of the map you have explored. All other unexplored areas are black. The maze is made up of the following items:
+    <ol>
+      <li><b>Robot</b> - Your robot partner which can be any of three colors (red, blue, or green).</li>
+      <li><b>Walls</b> - Which the robot cannot drive through.</li>
+      <li><b>Broken Glass</b> - If driven over will confuse the robot's sensors when in Automatic Mode and may cause it to move in an unexpected direction.</li>
+      <li><b>Holes</b> - If driven over the robot will fall in and fail the maze.</li>
+      <li><b>Explored Areas</b> - Areas which are white. Obstacles in this area area visible.</li>
+      <li><b>Unxplored Areas</b> - Areas which are black. Obstacles in this area not visible.</li>
+      <li><b>Finish</b> - A visible green square located anywhere on the map.</li>
+    </ol>
+
+    Below the map are a set of buttons to control the robot. While you are playing you will have all buttons available
+    to you.
+    <ol>
+      <li><b>Manual Control</b> - Allows you control the robot with the up, left, right,and down buttons.</li>
+      <li><b>Automatic Control</b> - Remove control from you and allows the AI drive to the best of it's abilities.</li>
+      <li><b>Abort Mission</b> - End the mission.</li>
+      <li><b>Up</b> - In Manual Control mode, move the agent up 1 square.</li>
+      <li><b>Down</b> - In Manual Control mode, move the agent down 1 square.</li>
+      <li><b>Left</b> - In Manual Control mode, move the agent left 1 square.</li>
+      <li><b>Right</b> - In Manual Control mode, move the agent right 1 square.</li>
+    </ol>
+    The control mode buttons (Manual Control and Automatic Control) will be lit green depending on which is active. Please
+    note, Manual Control is significantly slower than Automatic Control, this is due to communication delays between
+    you and the robot.
+
+    <h3>Scoring</h3>
+    You will receive a score (and subsequent reward) based on how many safe traverses of the mazes you and the robot
+    complete. Here safe means making it to the goal. The payout is as follows:
+    <ul>
+      <li><b>Base Rate</b> of $10USD per hour.</li>
+      <li><b> + Bonus</b> of $0.5USD per maze if the robot reaches the goal.</li>
+      <li><b> + Bonus</b> up to $0.5USD per maze if the robot reaches the goal quickly.</li>
+    </ul>
+
+    Simply put, you will receive more money if you reach the goal faster. If you fail (i.e. fall into a hole), you will
+    receive just the base rate.
+  </div>
+
+  <div>
+    Tutorial 1: no competency report
+
+  </div>
+  <div>
+    Tutorial 2: pre-mission competency report
+  </div>
+
+  <div>
+    Tutorial 3: segment-level competency report
+  </div>
+
+  <h2>Please start the next round</h2>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('gridworld_app.playgame') }}" style="font-size: 40px">Start</a>
+  {% endif %}
+{% endblock %}
