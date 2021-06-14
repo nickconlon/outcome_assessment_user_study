@@ -214,14 +214,14 @@
           });
         }
 
-        move_time = 100
+        move_time = 1000
         if (state === AGENT) {
           drive_agent("policy")
-          move_time = 100
+          move_time = 500
         }
         else if (state === HUMAN) {
           number_steps_during_intervention ++
-          move_time = 100
+          move_time = 1000
         }
 
         setTimeout(function onTick() {
