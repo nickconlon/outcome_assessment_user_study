@@ -4,7 +4,16 @@ DROP TABLE IF EXISTS post;
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   run_counter INTEGER NOT NULL DEFAULT 0,
+  first_color INTEGER,
+  second_color INTEGER,
+  third_color INTEGER,
+  accuracy INTEGER,
+  competency INTEGER,
   username TEXT UNIQUE NOT NULL,
+  first_trust INTEGER,
+  second_trust INTEGER,
+  third_trust INTEGER,
+  open_question TEXT,
   password TEXT NOT NULL
 );
 
@@ -20,8 +29,11 @@ CREATE TABLE post (
 CREATE TABLE results (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    run_number INTEGER NOT NULL,
-    level_number INTEGER NOT NULL,
+    map_number INTEGER NOT NULL,
+    accuracy_level INTEGER NOT NULL,
+    competency_level INTEGER NOT NULL,
+    confidence TEXT NOT NULL,
+    report_level INTEGER NOT NULL,
     run_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     h_score TEXT NOT NULL,
     a_score TEXT NOT NULL,

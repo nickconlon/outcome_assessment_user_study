@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+  <form action="/trust_question" method="POST" id="myform">
+      On a scale from 0-5, how much to you trust the {{ post.color }} robot?
+    <div class="radioGroup">
+        No trust
+        <label for="0">0<br />
+            <input type="radio" name="mark" id="0" value="0" required/>
+        </label>
+        <label for="1">1<br />
+            <input type="radio" name="mark" id="1" value="1" />
+        </label>
+        <label for="2">2<br />
+            <input type="radio" name="mark" id="2" value="2" />
+        </label>
+        <label for="3">3<br />
+            <input type="radio" name="mark" id="3" value="3" />
+        </label>
+        <label for="4">4<br />
+            <input type="radio" name="mark" id="4" value="4" />
+        </label>
+        <label for="5">5<br />
+            <input type="radio" name="mark" id="5" value="5" />
+        </label>
+        Strong trust
+    </div>
+      <input type="submit" value="Submit">
+  </form>
+
+<style>
+   .radioGroup label {
+  display: inline-block;
+  margin: 0 0.2em;
+  text-align: center;
+  padding-top: 5%;
+}
+
+#myform {
+        text-align: center;
+        padding-top: 5%;
+        font-size: 20;
+}
+</style>
+
+{% endblock %}

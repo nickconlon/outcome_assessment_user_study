@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+  {% if g.user %}
+   <form action="/open_question" method="POST" id="myform">
+     Use this area to let us know your thoughts on the study<br><br>
+     <label for="open"></label>
+       <textarea id="open" name="open_text" rows="5" cols="50"> </textarea>
+
+     <br><br>
+     <input type="submit" value="Submit">
+   </form>
+
+<style>
+#myform {
+        text-align: center;
+        padding-top: 5%;
+        font-size: 20;
+}
+</style>
+  {% endif %}
+{% endblock %}

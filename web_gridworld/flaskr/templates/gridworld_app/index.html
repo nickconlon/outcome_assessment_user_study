@@ -3,11 +3,13 @@
 
 
 {% block content %}
+  {% if g.user %}
   <div>
     <h2>Welcome, please start with the tutorial</h2>
   </div>
   <div>
     <a class="action" href="{{ url_for('gridworld_app.base_tutorial') }}" style="font-size: 40px">Tutorial</a>
   </div>
+  {% endif %}
 
 {% endblock %}
