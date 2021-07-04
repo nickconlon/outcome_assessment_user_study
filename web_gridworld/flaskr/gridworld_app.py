@@ -18,13 +18,10 @@ CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
 
 @bp.route('/')
 def index():
-    db = get_db()
-    posts = db.execute(
-        'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' ORDER BY created DESC'
-    ).fetchall()
-    return render_template('gridworld_app/index.html', posts=posts)
+    if g.user is not None:
+        return base_tutorial()
+    else:
+        return render_template('gridworld_app/index.html', posts={})
 
 
 @bp.route('/practicegame', methods=('GET', 'POST'))
@@ -92,7 +89,7 @@ def playgame():
                          +" confidence</b> in navigating to the blue square, and <b>"+ rand_conf2 \
                          + " confidence </b> in navigating to the green square."
 
-        confidence = confidence.replace('robot', '<u>' + COLORS[color] + ' robot</u>')
+    confidence = confidence.replace('robot', '<u>' + COLORS[color] + ' robot</u>')
     obstacles = []
     dangers = []
     randomizers = []
@@ -235,10 +232,16 @@ def trust_question():
 def open_question():
     if request.method == 'POST':
         js = request.form['open_text']
+
         db = get_db()
         db.execute('UPDATE user SET open_question = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-    return render_template('gridworld_app/thank_you.html', post={})
+
+    db = get_db()
+    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
+    completion_code = u[12]
+
+    return render_template('gridworld_app/thank_you.html', post={'code': completion_code})
 
 
 @bp.route('/base_tutorial', methods=('GET', 'POST'))
@@ -250,16 +253,24 @@ def base_tutorial():
     accuracy_level = np.random.randint(0, 2)
     # choose competency level from [competent, random]
     competency_level = np.random.randint(0, 2)
+    # choose a completion code for the user (hopefully this is random enough)
+    completion_code = np.random.randint(111111111, 999999999)
     db = get_db()
-    db.execute('UPDATE user SET run_counter=?, first_color=?, second_color=?, third_color=?, accuracy=?, competency=? WHERE id = ?', (0, int(color_order[0]), int(color_order[1]), int(color_order[2]), accuracy_level, competency_level, g.user['id'],))
+    db.execute('UPDATE user SET run_counter=?, first_color=?, second_color=?, third_color=?, accuracy=?, competency=?, code=? WHERE id = ?', (0, int(color_order[0]), int(color_order[1]), int(color_order[2]), accuracy_level, competency_level, completion_code, g.user['id'],))
     db.commit()
     print("Starting new round:")
     print("  color_order={}".format([set_color(x) for x in color_order]))
     print("  accuracy_level={}".format("accurate" if accuracy_level is 0 else "random"))
     print("  competency_level={}".format("accurate" if competency_level is 0 else "random"))
+    print("  completion_code={}".format(completion_code))
 
     post = {'title': 'tutorial'}
     return render_template('gridworld_app/base_tutorial.html', post=post)
+
+
+@bp.route('/already_completed', methods=('GET', 'POST'))
+def already_completed():
+    return render_template('gridworld_app/already_completed.html', post={})
 
 
 def set_color(x):

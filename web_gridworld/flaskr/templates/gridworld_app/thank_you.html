@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 
-  {% block header %}
-    <h1>{% block title %}Thank you!{% endblock %}</h1>
-  {% endblock %}
+
+
+
 
   {% block content %}
-  <div>
-      Completion Code: 0123456789
-  </div>
+<h2>Thank you! your completion code is <u>{{ post.code }}</u></h2>
+
   {% if g.user %}
     <a class="action" href="{{ url_for('gridworld_app.index') }}">Return to index</a>
   {% endif %}

@@ -14,6 +14,8 @@ CREATE TABLE user (
   second_trust INTEGER,
   third_trust INTEGER,
   open_question TEXT,
+  code INTEGER,
+  time_start timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   password TEXT NOT NULL
 );
 

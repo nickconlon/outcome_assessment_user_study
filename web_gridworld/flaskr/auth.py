@@ -13,7 +13,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = "test1234"#request.form['password']
         db = get_db()
         error = None
 
@@ -24,8 +24,7 @@ def register():
         elif db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
-            error = 'User {} is already registered.'.format(username)
-
+            error = 'User {} has already participated. Please close the browser window to exit the study.'.format(username)
         if error is None:
             db.execute(
                 'INSERT INTO user (username, password) VALUES (?, ?)',
@@ -42,7 +41,7 @@ def register():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = "test1234"#request.form['password']
         db = get_db()
         error = None
         user = db.execute(

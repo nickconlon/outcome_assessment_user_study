@@ -2,16 +2,12 @@
 
   {% block content %}
   <div>
-    <h2>Hello!</h2>
-  </div>
-  <div>
-    We are interested in studying how a human and a robot counterpart can solve a navigation task together. Here you will be faced
-    with a set of mazes of varying difficulty and paired with a robot of varying capability. You will have the option of
-    driving the robot, or letting the robot automatically drive. There will be dangers in the maze which you will need to
-    avoid. Your view of the mazes, and control you have of the robot will be limited, so you must work together with your
-    new robot partner. There will be three sets of mazes in total, each with a new robot. Each new set of mazes will be
-    preceded by a short tutorial to help you get to know your new robot partner. Your job is to work with the robot to
-    safely navigate through each maze from start to finish.
+    <br><br>
+    You will be faced with a set of mazes of varying difficulty and paired with a robot of varying capability. You will
+    have the option of driving the robot, or letting the robot automatically drive. There will be dangers in the maze
+    which you will need to avoid. Your view of the mazes, and control you have of the robot will be limited, so you must
+    work together with your new robot partner. Your job is to work with the robot to safely navigate through each maze
+    from start to finish.
   </div>
   <div>
     <h3>Control Panel</h3>
@@ -53,8 +49,8 @@
     You will receive a score (and subsequent reward) based on how many safe traverses of the mazes you and the robot
     complete. Here safe means making it to the goal. The payout is as follows:
     <ul>
-      <li><b>Base Rate</b> of $10USD per hour.</li>
-      <li><b> + Bonus</b> of $0.5USD per maze if the robot reaches the goal.</li>
+      <li><b>Base Rate</b> of $6USD per hour.</li>
+      <li><b> + Bonus</b> of $6USD per hour if the robot reaches the goal.</li>
       <li><b> + Bonus</b> up to $0.5USD per maze if the robot reaches the goal quickly.</li>
     </ul>
 
@@ -62,20 +58,16 @@
     receive just the base rate.
   </div>
 
-  <div>
-    Tutorial 1: no competency report
-
-  </div>
-  <div>
-    Tutorial 2: pre-mission competency report
-  </div>
-
-  <div>
-    Tutorial 3: segment-level competency report
-  </div>
-
-  <h2>Please start the next round</h2>
   {% if g.user %}
-    <a class="action" href="{{ url_for('gridworld_app.playgame') }}" style="font-size: 40px">Start</a>
+    <div id="button">
+    <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the first round</a>
+    </div>
   {% endif %}
+
+  <style>
+    #button {
+      text-align: center;
+      font-size: 50px;
+    }
+  </style>
 {% endblock %}
