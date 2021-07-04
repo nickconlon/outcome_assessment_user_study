@@ -16,6 +16,11 @@ CREATE TABLE user (
   open_question TEXT,
   code INTEGER,
   time_start timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  prescreen TEXT,
+  age TEXT,
+  gender TEXT,
+  education TEXT,
+  games TEXT,
   password TEXT NOT NULL
 );
 

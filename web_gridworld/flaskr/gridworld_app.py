@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
 
@@ -16,12 +16,31 @@ THIRD = 6
 COLORS = ['red', 'green', 'blue']
 CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
 
+
 @bp.route('/')
 def index():
     if g.user is not None:
-        return base_tutorial()
+        return render_template('gridworld_app/prescreen.html')
     else:
         return render_template('gridworld_app/index.html', posts={})
+
+
+@bp.route('/prescreen', methods=('POST',))
+def prescreen():
+    english = request.form['english']
+    vision = request.form['vision']
+    depth = request.form['depth']
+    colorblind = request.form['colorblind']
+
+    db_entry = english+vision+depth+colorblind
+    db = get_db()
+    db.execute('UPDATE user SET prescreen=? WHERE id = ?', (db_entry, g.user['id'],))
+    db.commit()
+
+    total = int(english)+int(vision)+int(depth)+int(colorblind)
+    if total != 4:
+        return render_template('gridworld_app/already_completed.html')
+    return base_tutorial()
 
 
 @bp.route('/practicegame', methods=('GET', 'POST'))
@@ -33,6 +52,7 @@ def practicegame():
 
     data = {}
     return render_template('gridworld_app/index.html', start_data=data)
+
 
 @bp.route('/playgame', methods=('GET', 'POST'))
 @login_required
@@ -231,16 +251,21 @@ def trust_question():
 @login_required
 def open_question():
     if request.method == 'POST':
-        js = request.form['open_text']
+        open_q = request.form['open_text']
+        age = request.form['age']
+        gender = request.form['gender']
+        education = request.form['education']
+        games = request.form['games']
 
         db = get_db()
-        db.execute('UPDATE user SET open_question = ? WHERE id = ?', (js, g.user['id'],))
+        db.execute('UPDATE user SET open_question=?, age=?, gender=?, education=?, games=? WHERE id = ?',
+                   (open_q, age, gender, education, games, g.user['id'],))
         db.commit()
 
     db = get_db()
     u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
     completion_code = u[12]
-
+    session.clear()
     return render_template('gridworld_app/thank_you.html', post={'code': completion_code})
 
 
@@ -255,6 +280,7 @@ def base_tutorial():
     competency_level = np.random.randint(0, 2)
     # choose a completion code for the user (hopefully this is random enough)
     completion_code = np.random.randint(111111111, 999999999)
+
     db = get_db()
     db.execute('UPDATE user SET run_counter=?, first_color=?, second_color=?, third_color=?, accuracy=?, competency=?, code=? WHERE id = ?', (0, int(color_order[0]), int(color_order[1]), int(color_order[2]), accuracy_level, competency_level, completion_code, g.user['id'],))
     db.commit()
