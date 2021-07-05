@@ -21,6 +21,7 @@ CREATE TABLE user (
   gender TEXT,
   education TEXT,
   games TEXT,
+  latest_score INTEGER,
   password TEXT NOT NULL
 );
 

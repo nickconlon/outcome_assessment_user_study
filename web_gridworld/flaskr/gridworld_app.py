@@ -178,11 +178,26 @@ def endgame():
              js['map_num'], js['accuracy'], js['competency'], js['report'], js['conf'])
         )
         db.commit()
-
+        score = 5
+        if int(js['human']) > 0:
+            score -= 2
+        if js['outcome'] == 'ABORT':
+            score -= 3
+        if js['outcome'] == 'DEAD':
+            score = 0
         db = get_db()
-        db.execute('UPDATE user SET run_counter = run_counter+1 WHERE id = ?', (g.user['id'],))
+        db.execute('UPDATE user SET run_counter=run_counter+1, latest_score=? WHERE id = ?', (score, g.user['id']))
         db.commit()
 
+    db = get_db()
+    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
+    score = u[19]
+    return render_template('gridworld_app/outcome.html', post={'score': score})#playgame()
+
+
+@bp.route('/outcome', methods=('GET', 'POST'))
+@login_required
+def outcome():
     db = get_db()
     u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
     if u[1] == FIRST:
@@ -195,8 +210,7 @@ def endgame():
         db.commit()
         return trust()
 
-    else:
-        return playgame()
+    return playgame()
 
 
 @bp.route('/trust', methods=('GET', 'POST'))

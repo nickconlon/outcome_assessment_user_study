@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+    <div style="text-align:center; font-size:50px">
+      <h2>Score: {{ post.score }} points</h2>
+    </div>
+
+  {% if g.user %}
+    <div id="button">
+    <a class="action" href="{{ url_for('gridworld_app.outcome') }}" >Continue</a>
+    </div>
+  {% endif %}
+
+  <style>
+    #button {
+      text-align: center;
+      font-size: 50px;
+    }
+  </style>
+  {% endblock %}
