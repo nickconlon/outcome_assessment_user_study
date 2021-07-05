@@ -9,9 +9,9 @@ import numpy as np
 
 bp = Blueprint('gridworld_app', __name__)
 
-FIRST = 2
-SECOND = 4
-THIRD = 6
+FIRST = 6
+SECOND = 11
+THIRD = 16
 
 COLORS = ['red', 'green', 'blue']
 CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
@@ -71,7 +71,6 @@ def playgame():
         map_number = u[1]
     confidence = ""
 
-    print(accuracy_level)
     if map_number < FIRST:
         report_level = 0
         color = int(u[2])
@@ -94,7 +93,7 @@ def playgame():
             confidence = "<b>Report:</b> The robot has <b>"+rand_conf\
                          +" confidence</b> in navigating to the green square."
     elif map_number >= SECOND:
-        map_number = 21 - map_number
+        map_number = map_number+4
         if accuracy_level == 0:
 
             with open("flaskr/maps/map"+str(map_number)+"_confidence.txt") as file:
@@ -107,7 +106,7 @@ def playgame():
             rand_conf2 = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
             confidence = "<b>Report:</b> The robot has <b>"+rand_conf1\
                          +" confidence</b> in navigating to the blue square, and <b>"+ rand_conf2 \
-                         + " confidence </b> in navigating to the green square."
+                         + " confidence </b> in navigating from the blue square to the green square."
 
     confidence = confidence.replace('robot', '<u>' + COLORS[color] + ' robot</u>')
     obstacles = []
@@ -186,7 +185,6 @@ def endgame():
 
     db = get_db()
     u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-    print("U " + str(u[1]))
     if u[1] == FIRST:
         return trust()
     elif u[1] == SECOND:
@@ -224,11 +222,9 @@ def trust():
 def trust_question():
     if request.method == 'POST':
         js = request.form['mark']
-        print(js)
         post = {}
         db = get_db()
         u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-        print("U " + str(u[1]))
         if u[1] == FIRST:
             db = get_db()
             db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
@@ -281,10 +277,14 @@ def base_tutorial():
     # choose a completion code for the user (hopefully this is random enough)
     completion_code = np.random.randint(111111111, 999999999)
 
+    level_0_map_order = np.random.choice(np.arange(0,4), 3, replace=False)
+    level_1_map_order = np.random.choice(np.arange(0,4), 3, replace=False)
+    level_2_map_order = np.random.choice(np.arange(0,4), 3, replace=False)
+
     db = get_db()
     db.execute('UPDATE user SET run_counter=?, first_color=?, second_color=?, third_color=?, accuracy=?, competency=?, code=? WHERE id = ?', (0, int(color_order[0]), int(color_order[1]), int(color_order[2]), accuracy_level, competency_level, completion_code, g.user['id'],))
     db.commit()
-    print("Starting new round:")
+    print("Setting up new participant:")
     print("  color_order={}".format([set_color(x) for x in color_order]))
     print("  accuracy_level={}".format("accurate" if accuracy_level is 0 else "random"))
     print("  competency_level={}".format("accurate" if competency_level is 0 else "random"))

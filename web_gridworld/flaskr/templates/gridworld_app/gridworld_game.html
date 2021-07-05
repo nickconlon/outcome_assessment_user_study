@@ -172,6 +172,9 @@
     // Return a two dimensional drawing context
     const grid_board_ctx = grid_board.getContext("2d");
 
+    if(map_number === 0) {
+        document.getElementById('title').innerHTML = "<div><b>Practice: Work with the robot and navigate to the green square. Ready, go!</b></div>"
+    }
     // Start the game
     main();
     agent_sense();
@@ -434,7 +437,9 @@
 
       // Randomly move the agent around if it hits glassy area
       if (state == AGENT) {
-        if(check_collision(head, GLASS))
+        collided = check_collision(head, GLASS)
+        incompetent = competency_level === 1
+        if(collided || incompetent)
         {
           if (Math.random() > 0.2) {
             if (Math.random() > 0.5) {

@@ -1,1 +1,1 @@
-<b>Report:</b> The robot has <b>Very good confidence</b> in navigating to the green square.
+<b>Report:</b> The robot has <b>Good confidence</b> in navigating to the blue square, <b>Very good confidence</b> in navigating from the blue square to the green square.
