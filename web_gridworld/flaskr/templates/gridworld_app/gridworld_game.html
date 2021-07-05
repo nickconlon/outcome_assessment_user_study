@@ -436,24 +436,22 @@
       const head = {x: agent.x + dx, y: agent.y + dy};
 
       // Randomly move the agent around if it hits glassy area
+      // p(random_action_i)=.2 p(not random)=.4 (4 total actions)
       if (state == AGENT) {
         collided = check_collision(head, GLASS)
         incompetent = competency_level === 1
         if(collided || incompetent)
         {
-          if (Math.random() > 0.2) {
-            if (Math.random() > 0.5) {
+          if (Math.random() > 0.4) {
+            p_random_action = Math.random()
+            if (p_random_action <= 0.25) {
               head.x = head.x - cell_size
-            } else {
+            } else if (p_random_action <= 0.5) {
               head.x = head.x + cell_size
-            }
-          }
-          if (Math.random() > 0.2){
-            if (Math.random() > 0.5){
-              head.y = head.y-cell_size
-            }
-            else{
-              head.y = head.y+cell_size
+            } else if (p_random_action <= 0.75) {
+                head.y = head.y-cell_size
+            } else if (p_random_action <= 1.0) {
+                head.y = head.y+cell_size
             }
           }
         }
