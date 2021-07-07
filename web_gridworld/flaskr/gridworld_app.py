@@ -9,9 +9,8 @@ import numpy as np
 
 bp = Blueprint('gridworld_app', __name__)
 
-FIRST = 6
-SECOND = 11
-THIRD = 16
+MAPS_PER_LEVEL = 4
+MAX_MAPS_PER_LEVEL = 5
 
 COLORS = ['red', 'green', 'blue']
 CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
@@ -32,26 +31,15 @@ def prescreen():
     depth = request.form['depth']
     colorblind = request.form['colorblind']
 
-    db_entry = english+vision+depth+colorblind
+    db_entry = english + vision + depth + colorblind
     db = get_db()
     db.execute('UPDATE user SET prescreen=? WHERE id = ?', (db_entry, g.user['id'],))
     db.commit()
 
-    total = int(english)+int(vision)+int(depth)+int(colorblind)
+    total = int(english) + int(vision) + int(depth) + int(colorblind)
     if total != 4:
         return render_template('gridworld_app/already_completed.html')
     return base_tutorial()
-
-
-@bp.route('/practicegame', methods=('GET', 'POST'))
-@login_required
-def practicegame():
-    # load practice map
-    # load practice confidence
-    # load practice policy
-
-    data = {}
-    return render_template('gridworld_app/index.html', start_data=data)
 
 
 @bp.route('/playgame', methods=('GET', 'POST'))
@@ -61,42 +49,33 @@ def playgame():
     u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
     accuracy_level = u[5]
     competency_level = u[6]
-
-    if u[1] == -1:
-        db = get_db()
-        db.execute('UPDATE user SET run_counter = 0 WHERE id = ?', (g.user['id'],))
-        db.commit()
-        map_number = 0
-    else:
-        map_number = u[1]
+    report_level = session['level']
     confidence = ""
 
-    if map_number < FIRST:
-        report_level = 0
-        color = int(u[2])
-    elif map_number < SECOND:
-        report_level = 1
-        color = int(u[3])
+    if int(report_level) > -1:
+        map_number = session['l' + report_level + '_order'][int(session['ctr'])]
+        color = int(session['c_order'][int(report_level)])
+        map_path = "flaskr/maps/level_" + report_level + "/map" + map_number
     else:
-        report_level = 2
-        color = int(u[4])
+        map_number = '0'
+        color = int(session['c_order'][0])
+        map_path = "flaskr/maps/map0"
 
-    if FIRST <= map_number < SECOND:
+    if int(report_level) == 1:
         if accuracy_level == 0:
-            with open("flaskr/maps/map"+str(map_number)+"_confidence.txt") as file:
+            with open(map_path + "_confidence.txt") as file:
                 for line in file.readlines():
                     confidence = line.strip()
                     break
         else:
             # randomize confidence statement
             rand_conf = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
-            confidence = "<b>Report:</b> The robot has <b>"+rand_conf\
-                         +" confidence</b> in navigating to the green square."
-    elif map_number >= SECOND:
-        map_number = map_number+4
+            confidence = "<b>Report:</b> The robot has <b>" + rand_conf \
+                         + " confidence</b> in navigating to the green square."
+    elif int(report_level) == 2:
         if accuracy_level == 0:
 
-            with open("flaskr/maps/map"+str(map_number)+"_confidence.txt") as file:
+            with open(map_path + "_confidence.txt") as file:
                 for line in file.readlines():
                     confidence = line.strip()
                     break
@@ -104,8 +83,8 @@ def playgame():
             # randomize confidence statement
             rand_conf1 = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
             rand_conf2 = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
-            confidence = "<b>Report:</b> The robot has <b>"+rand_conf1\
-                         +" confidence</b> in navigating to the blue square, and <b>"+ rand_conf2 \
+            confidence = "<b>Report:</b> The robot has <b>" + rand_conf1 \
+                         + " confidence</b> in navigating to the blue square, and <b>" + rand_conf2 \
                          + " confidence </b> in navigating from the blue square to the green square."
 
     confidence = confidence.replace('robot', '<u>' + COLORS[color] + ' robot</u>')
@@ -115,21 +94,21 @@ def playgame():
     subgoal = []
     goal = []
     policy = []
-    with open("flaskr/maps/map"+str(map_number)+"_policy.txt") as file:
+    with open(map_path + "_policy.txt") as file:
         for line in file.readlines():
             line = line.strip()
             for l in line.split(','):
                 policy.append(int(l))
 
-    with open("flaskr/maps/map"+str(map_number)+".txt") as file:
+    with open(map_path + ".txt") as file:
         for y, line in enumerate(file.readlines()):
             for x, c in enumerate(line):
                 if c == 'o':
-                    obstacles.append([x,y])
+                    obstacles.append([x, y])
                 if c == 'g':
-                    randomizers.append([x,y])
+                    randomizers.append([x, y])
                 if c == 'd':
-                    dangers.append([x,y])
+                    dangers.append([x, y])
                 if c == 'G':
                     goal = [x, y]
                 if c == 'r':
@@ -151,6 +130,7 @@ def playgame():
         'map_number': map_number,  # The reference number for this map
         'policy': policy  # The policy to execute
     }
+    print(session)
     print("Rendering new map:")
     print("  map_number={}".format(map_number))
     print("  color={}".format(COLORS[color]))
@@ -185,76 +165,49 @@ def endgame():
             score -= 3
         if js['outcome'] == 'DEAD':
             score = 0
-        db = get_db()
-        db.execute('UPDATE user SET run_counter=run_counter+1, latest_score=? WHERE id = ?', (score, g.user['id']))
-        db.commit()
 
-    db = get_db()
-    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-    score = u[19]
-    return render_template('gridworld_app/outcome.html', post={'score': score})#playgame()
+        session['score'] = str(score)
+        session['ctr'] = str(int(session['ctr']) + 1)
+        if int(session['ctr']) % MAPS_PER_LEVEL == 0 or session['level'] == '-1':
+            session['level'] = str(int(session['level']) + 1)
+            session['ctr'] = '0'
+            print("changing level")
+
+    return render_template('gridworld_app/outcome.html', post={'score': session['score']})
 
 
 @bp.route('/outcome', methods=('GET', 'POST'))
 @login_required
 def outcome():
-    db = get_db()
-    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-    if u[1] == FIRST:
-        return trust()
-    elif u[1] == SECOND:
-        return trust()
-    if u[1] >= THIRD or u[1] == -1:
-        db = get_db()
-        db.execute('UPDATE user SET run_counter = -1 WHERE id = ?', (g.user['id'],))
-        db.commit()
-        return trust()
-
+    if session['ctr'] == '0':
+        color_idx = int(np.max(int(session['level']) - 1, 0))
+        color = int(session['c_order'][color_idx])
+        color = COLORS[color]
+        post = {"color": color}
+        return render_template('gridworld_app/trust.html', post=post)
     return playgame()
 
 
-@bp.route('/trust', methods=('GET', 'POST'))
-@login_required
-def trust():
-    post = {}
-    if request.method == 'POST':
-        color = ""
-        db = get_db()
-        u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-        if u[1] == FIRST:
-            color = COLORS[int(u[2])]
-        elif u[1] == SECOND:
-            color = COLORS[int(u[3])]
-        else:
-            color = COLORS[int(u[4])]
-        post = {"color": color}
-    return render_template('gridworld_app/trust.html', post=post)
-
-
-@bp.route('/trust_question', methods=('GET', 'POST'))
+@bp.route('/trust_question', methods=('POST',))
 @login_required
 def trust_question():
-    if request.method == 'POST':
-        js = request.form['mark']
-        post = {}
+    js = request.form['mark']
+    post = {}
+    if session['level'] <= '1':
         db = get_db()
-        u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-        if u[1] == FIRST:
-            db = get_db()
-            db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
-            db.commit()
-            return render_template('gridworld_app/tutorial1.html', post=post)
-        elif u[1] == SECOND:
-            db = get_db()
-            db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (js, g.user['id'],))
-            db.commit()
-            return render_template('gridworld_app/tutorial2.html', post=post)
-        else:
-            db = get_db()
-            db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (js, g.user['id'],))
-            db.commit()
-            return render_template('gridworld_app/open_question.html', post=post)
-    return trust()
+        db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.commit()
+        return render_template('gridworld_app/tutorial1.html', post=post)
+    elif session['level'] == '2':
+        db = get_db()
+        db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.commit()
+        return render_template('gridworld_app/tutorial2.html', post=post)
+    elif session['level'] == '3':
+        db = get_db()
+        db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.commit()
+        return render_template('gridworld_app/open_question.html', post=post)
 
 
 @bp.route('/open_question', methods=('GET', 'POST'))
@@ -283,7 +236,7 @@ def open_question():
 @login_required
 def base_tutorial():
     # choose color order from [red, green, blue]
-    color_order = np.random.choice([0, 1, 2], 3, replace=False)
+    color_order = np.random.choice([0, 1, 2, ], 3, replace=False)
     # choose accuracy level from [accurate, random]
     accuracy_level = np.random.randint(0, 2)
     # choose competency level from [competent, random]
@@ -291,15 +244,26 @@ def base_tutorial():
     # choose a completion code for the user (hopefully this is random enough)
     completion_code = np.random.randint(111111111, 999999999)
 
-    level_0_map_order = np.random.choice(np.arange(0,4), 3, replace=False)
-    level_1_map_order = np.random.choice(np.arange(0,4), 3, replace=False)
-    level_2_map_order = np.random.choice(np.arange(0,4), 3, replace=False)
+    level_0_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
+    level_1_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
+    level_2_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
+    session['l0_order'] = "".join([str(x) for x in level_0_map_order])
+    session['l1_order'] = "".join([str(x) for x in level_1_map_order])
+    session['l2_order'] = "".join([str(x) for x in level_2_map_order])
+    session['c_order'] = "".join([str(x) for x in color_order])
+    session['level'] = '-1'
+    session['ctr'] = '0'
+    session['score'] = '0'
+    import sys
+    print(sys.getsizeof(session))
 
     db = get_db()
-    db.execute('UPDATE user SET run_counter=?, first_color=?, second_color=?, third_color=?, accuracy=?, competency=?, code=? WHERE id = ?', (0, int(color_order[0]), int(color_order[1]), int(color_order[2]), accuracy_level, competency_level, completion_code, g.user['id'],))
+    db.execute(
+        'UPDATE user SET accuracy=?, competency=?, code=? WHERE id = ?',
+        (accuracy_level, competency_level, completion_code, g.user['id'],))
     db.commit()
     print("Setting up new participant:")
-    print("  color_order={}".format([set_color(x) for x in color_order]))
+    print("  color_order={}".format([COLORS[x] for x in color_order]))
     print("  accuracy_level={}".format("accurate" if accuracy_level is 0 else "random"))
     print("  competency_level={}".format("accurate" if competency_level is 0 else "random"))
     print("  completion_code={}".format(completion_code))
@@ -311,12 +275,3 @@ def base_tutorial():
 @bp.route('/already_completed', methods=('GET', 'POST'))
 def already_completed():
     return render_template('gridworld_app/already_completed.html', post={})
-
-
-def set_color(x):
-    if x == 0:
-        return "red"
-    elif x == 1:
-        return "green"
-    else:
-        return "blue"

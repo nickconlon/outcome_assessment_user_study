@@ -1,0 +1,1 @@
+<b>Report:</b> The robot has <b>Bad confidence</b> in navigating to the green square.

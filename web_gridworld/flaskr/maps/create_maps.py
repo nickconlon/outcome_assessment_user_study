@@ -127,7 +127,7 @@ def test1():
     board[0][0]='S'
     board[height-1][width-1]='G'
 
-    with open('map1.txt', 'w') as f:
+    with open('created_maps/map1.txt', 'w') as f:
         for l in board:
             for c in l:
                 f.write(c)
