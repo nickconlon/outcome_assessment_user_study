@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
   {% block content %}
+  <br><br>
   <div>
       You have been teamed with a new robot. This robot is capable of sending you a report telling you it's <b>self-confidence</b>
-      in navigating (in Automatic Mode) to an intermediate location denoted by a blue square, and it's <b>self-confidence</b>
-      from that intermediate location to the finish. This statement is the robots estimate of how well it thinks it will
-      perform. You may use it to inform your decision on Manual Control vs. Automatic Control. Note the addition of the
-      <b>self-confidence</b> report above the map.
+      in driving (in Automatic Mode) to an intermediate location denoted by a blue square, and it's <b>self-confidence</b>
+      in driving from that intermediate location to the finish. This new report will be displayed right above the maze.
   </div>
-    <div style="text-align:center">
+  <br><br>
+    <div style="text-align:center; border:5px solid #555">
       <img src="static/images/control_panel_2.png" alt="" />
     </div>
   {% if g.user %}

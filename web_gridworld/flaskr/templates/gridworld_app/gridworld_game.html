@@ -107,7 +107,7 @@
 
     // 0 is black
     // 1 is visible
-    const visible_map = new Array(map_height*map_width).fill(1);
+    const visible_map = new Array(map_height*map_width).fill(0);
 
     // save the obstacle locations
     for (i=0; i<ob_locs.length; i++) {
@@ -172,7 +172,7 @@
     // Return a two dimensional drawing context
     const grid_board_ctx = grid_board.getContext("2d");
 
-    if(map_number === 0) {
+    if(report_level === -1) {
         document.getElementById('title').innerHTML = "<div><b>Practice: Work with the robot and navigate to the green square. Ready, go!</b></div>"
     }
     // Start the game

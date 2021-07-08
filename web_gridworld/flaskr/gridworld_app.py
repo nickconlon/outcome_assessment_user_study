@@ -193,7 +193,9 @@ def outcome():
 def trust_question():
     js = request.form['mark']
     post = {}
-    if session['level'] <= '1':
+    if session['level'] == '0':
+        return playgame()
+    elif session['level'] == '1':
         db = get_db()
         db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
@@ -238,9 +240,9 @@ def base_tutorial():
     # choose color order from [red, green, blue]
     color_order = np.random.choice([0, 1, 2, ], 3, replace=False)
     # choose accuracy level from [accurate, random]
-    accuracy_level = np.random.randint(0, 2)
+    accuracy_level = 0#np.random.randint(0, 2)
     # choose competency level from [competent, random]
-    competency_level = np.random.randint(0, 2)
+    competency_level = 0#np.random.randint(0, 2)
     # choose a completion code for the user (hopefully this is random enough)
     completion_code = np.random.randint(111111111, 999999999)
 
