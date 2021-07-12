@@ -240,9 +240,9 @@ def base_tutorial():
     # choose color order from [red, green, blue]
     color_order = np.random.choice([0, 1, 2, ], 3, replace=False)
     # choose accuracy level from [accurate, random]
-    accuracy_level = 0#np.random.randint(0, 2)
+    accuracy_level = np.random.randint(0, 2)
     # choose competency level from [competent, random]
-    competency_level = 0#np.random.randint(0, 2)
+    competency_level = np.random.randint(0, 2)
     # choose a completion code for the user (hopefully this is random enough)
     completion_code = "NC-"+str(np.random.randint(111111111, 999999999))+"-HRT"
 
