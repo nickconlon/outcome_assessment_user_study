@@ -4,9 +4,6 @@ DROP TABLE IF EXISTS post;
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   run_counter INTEGER NOT NULL DEFAULT 0,
-  first_color INTEGER,
-  second_color INTEGER,
-  third_color INTEGER,
   accuracy INTEGER,
   competency INTEGER,
   username TEXT UNIQUE NOT NULL,
@@ -14,7 +11,7 @@ CREATE TABLE user (
   second_trust INTEGER,
   third_trust INTEGER,
   open_question TEXT,
-  code INTEGER,
+  code TEXT,
   time_start timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   prescreen TEXT,
   age TEXT,
@@ -23,15 +20,6 @@ CREATE TABLE user (
   games TEXT,
   latest_score INTEGER,
   password TEXT NOT NULL
-);
-
-CREATE TABLE post (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    author_id INTEGER NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    title TEXT NOT NULL,
-    body TEXT NOT NULL,
-    FOREIGN KEY (author_id) REFERENCES user (id)
 );
 
 CREATE TABLE results (

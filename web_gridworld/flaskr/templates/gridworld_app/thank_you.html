@@ -5,9 +5,21 @@
 
 
   {% block content %}
-<h2>Thank you! your completion code is <u>{{ post.code }}</u></h2>
+<div id="completion_code">
+  <h2>Thank you for participating!<br>Your Mechanical Turk code is:<br> <u>{{ post.code }}</u></h2>
+
+</div>
 
   {% if g.user %}
-    <a class="action" href="{{ url_for('gridworld_app.index') }}">Return to index</a>
+    <a class="action" href="{{ url_for('gridworld_app.index') }}">TODO: REMOVE ME. Return to index</a>
   {% endif %}
+
+
+  <style>
+    #completion_code {
+      text-align: center;
+      font-size: 30;
+    }
+  </style>
+
 {% endblock %}

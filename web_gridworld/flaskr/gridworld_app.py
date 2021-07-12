@@ -47,8 +47,8 @@ def prescreen():
 def playgame():
     db = get_db()
     u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-    accuracy_level = u[5]
-    competency_level = u[6]
+    accuracy_level = u[2]
+    competency_level = u[3]
     report_level = session['level']
     confidence = ""
 
@@ -229,7 +229,7 @@ def open_question():
 
     db = get_db()
     u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-    completion_code = u[12]
+    completion_code = u[9]
     session.clear()
     return render_template('gridworld_app/thank_you.html', post={'code': completion_code})
 
@@ -244,7 +244,7 @@ def base_tutorial():
     # choose competency level from [competent, random]
     competency_level = 0#np.random.randint(0, 2)
     # choose a completion code for the user (hopefully this is random enough)
-    completion_code = np.random.randint(111111111, 999999999)
+    completion_code = "NC-"+str(np.random.randint(111111111, 999999999))+"-HRT"
 
     level_0_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
     level_1_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
