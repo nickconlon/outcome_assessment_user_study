@@ -38,7 +38,7 @@ def prescreen():
 
     total = int(english) + int(vision) + int(depth) + int(colorblind)
     if total != 4:
-        return render_template('gridworld_app/already_completed.html')
+        return render_template('gridworld_app/end_study.html')
     return base_tutorial()
 
 
@@ -274,6 +274,6 @@ def base_tutorial():
     return render_template('gridworld_app/base_tutorial.html', post=post)
 
 
-@bp.route('/already_completed', methods=('GET', 'POST'))
-def already_completed():
-    return render_template('gridworld_app/already_completed.html', post={})
+@bp.route('/end_study', methods=('GET', 'POST'))
+def end_study():
+    return render_template('gridworld_app/end_study.html', post={})

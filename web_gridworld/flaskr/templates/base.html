@@ -4,7 +4,7 @@
   <h1>Trust in a Human-Robot Team Study</h1>
   <ul>
     {% if g.user %}
-      <li><span>{{ g.user['username'] }}</span>
+      <li><span>Amazon Mechanical Turk ID: {{ g.user['username'] }}</span>
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
     {% endif %}
   </ul>
