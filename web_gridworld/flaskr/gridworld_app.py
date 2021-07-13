@@ -158,13 +158,15 @@ def endgame():
              js['map_num'], js['accuracy'], js['competency'], js['report'], js['conf'])
         )
         db.commit()
-        score = 5
-        if int(js['human']) > 0:
-            score -= 2
+        score = 5.0
         if js['outcome'] == 'ABORT':
-            score -= 3
+            score = 2.0
+        if int(js['human']) > 0:
+            score = 5-int(js['human'])*0.01
+            if score <= 0.0:
+                score = 0.0
         if js['outcome'] == 'DEAD':
-            score = 0
+            score = 0.0
 
         session['score'] = str(score)
         session['ctr'] = str(int(session['ctr']) + 1)
