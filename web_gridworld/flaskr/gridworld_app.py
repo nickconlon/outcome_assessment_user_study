@@ -163,9 +163,9 @@ def endgame():
             score = 2.0
         if int(js['human']) > 0:
             score = 5-int(js['human'])*0.01
-            if score <= 0.0:
-                score = 0.0
         if js['outcome'] == 'DEAD':
+            score = 0.0
+        if score <= 0.0:
             score = 0.0
 
         session['score'] = str(score)
