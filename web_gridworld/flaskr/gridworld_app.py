@@ -3,9 +3,10 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from .auth import login_required
-from .db import get_db
+from auth import login_required
+from db import get_db
 import numpy as np
+import os
 
 bp = Blueprint('gridworld_app', __name__)
 
@@ -55,11 +56,11 @@ def playgame():
     if int(report_level) > -1:
         map_number = session['l' + report_level + '_order'][int(session['ctr'])]
         color = int(session['c_order'][int(report_level)])
-        map_path = "flaskr/maps/level_" + report_level + "/map" + map_number
+        map_path = os.path.join("/var/www/html/flaskapp","flaskr/maps/level_" + report_level + "/map" + map_number)
     else:
         map_number = '0'
         color = int(session['c_order'][0])
-        map_path = "flaskr/maps/map0"
+        map_path = os.path.join("/var/www/html/flaskapp","flaskr/maps/map0")
 
     if int(report_level) == 1:
         if accuracy_level == 0:
