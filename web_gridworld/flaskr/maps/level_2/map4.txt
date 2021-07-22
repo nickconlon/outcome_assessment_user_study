@@ -1,6 +1,6 @@
 oooooooooooooooooooooooooooooo
-oad-o-d-g--o--rggd----d------o
-o-g-g--o-d----o-----ggg------o
+oad-o-d-g--o--rggdddd-d------o
+o-g-g--o-d----o--gggggg------o
 o--oooooooo---oooooood--oooooo
 od-g---g----dd---g----o---g--o
 o-g---g------do-----------o-Go
