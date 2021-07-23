@@ -269,8 +269,8 @@ def base_tutorial():
     print("Setting up new participant:")
     print("  IP addr={}".format(client_ip))
     print("  color_order={}".format([COLORS[x] for x in color_order]))
-    print("  accuracy_level={}".format("accurate" if accuracy_level is 0 else "random"))
-    print("  competency_level={}".format("accurate" if competency_level is 0 else "random"))
+    print("  accuracy_level={}".format("accurate" if accuracy_level == 0 else "random"))
+    print("  competency_level={}".format("accurate" if competency_level == 0 else "random"))
     print("  completion_code={}".format(completion_code))
 
     post = {'title': 'tutorial'}
