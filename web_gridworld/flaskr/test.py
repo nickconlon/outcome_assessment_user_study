@@ -1,15 +1,15 @@
 import sqlite3
 
-
+DB_FILE = '/databases/flaskr.sqlite'
 def cleanup():
     # Create a SQL connection to our SQLite database
-    con = sqlite3.connect("../../instance/flaskr.sqlite")
+    con = sqlite3.connect(DB_FILE)
     cur = con.cursor()
     cur.execute('DELETE FROM user')
     con.commit()
     con.close()
 
-    con = sqlite3.connect("../../instance/flaskr.sqlite")
+    con = sqlite3.connect(DB_FILE)
     cur = con.cursor()
     cur.execute('DELETE FROM results')
     con.commit()
@@ -17,7 +17,7 @@ def cleanup():
 
 def dump():
     # Create a SQL connection to our SQLite database
-    con = sqlite3.connect("../../instance/flaskr.sqlite")
+    con = sqlite3.connect(DB_FILE)
 
     cur = con.cursor()
 
