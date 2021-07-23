@@ -15,7 +15,7 @@ MAX_MAPS_PER_LEVEL = 5
 
 COLORS = ['red', 'green', 'blue']
 CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
-
+APP_PATH = "/var/www/html/web_gridworld/web_gridworld"
 
 @bp.route('/')
 def index():
@@ -56,11 +56,11 @@ def playgame():
     if int(report_level) > -1:
         map_number = session['l' + report_level + '_order'][int(session['ctr'])]
         color = int(session['c_order'][int(report_level)])
-        map_path = os.path.join("/var/www/html/flaskapp","flaskr/maps/level_" + report_level + "/map" + map_number)
+        map_path = os.path.join(APP_PATH,"flaskr/maps/level_" + report_level + "/map" + map_number)
     else:
         map_number = '0'
         color = int(session['c_order'][0])
-        map_path = os.path.join("/var/www/html/flaskapp","flaskr/maps/map0")
+        map_path = os.path.join(APP_PATH,"flaskr/maps/map0")
 
     if int(report_level) == 1:
         if accuracy_level == 0:
