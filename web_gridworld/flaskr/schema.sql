@@ -19,6 +19,7 @@ CREATE TABLE user (
   education TEXT,
   games TEXT,
   latest_score INTEGER,
+  client_ip TEXT,
   password TEXT NOT NULL
 );
 
@@ -31,13 +32,8 @@ CREATE TABLE results (
     confidence TEXT NOT NULL,
     report_level INTEGER NOT NULL,
     run_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    h_score TEXT NOT NULL,
-    a_score TEXT NOT NULL,
-    outcome TEXT NOT NULL,
     tot_mission_time_s INTEGER NOT NULL,
     tot_mission_steps INTEGER NOT NULL,
-    num_interventions INTEGER NOT NULL,
-    num_steps_interventions INTEGER NOT NULL,
-    intervention_locations TEXT NOT NULL,
+    path TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
