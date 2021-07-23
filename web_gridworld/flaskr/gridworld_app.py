@@ -152,11 +152,10 @@ def endgame():
         db = get_db()
         db.execute(
             'INSERT INTO results '
-            '(user_id, h_score, a_score,  outcome, tot_mission_time_s, tot_mission_steps, num_interventions, num_steps_interventions, intervention_locations, map_number, accuracy_level, competency_level, report_level, confidence) '
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            (g.user['id'], js['human'], js['agent'], js['outcome'], js['t_mission_time'],
-             js['t_mission_steps'], js['n_interventions'], js['n_steps_interventions'], str(js['intervention_loc']),
-             js['map_num'], js['accuracy'], js['competency'], js['report'], js['conf'])
+            '(user_id, tot_mission_time_s, tot_mission_steps, path, map_number, accuracy_level, competency_level, report_level, confidence) '
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            (g.user['id'],  js['t_mission_time'], js['t_mission_steps'], str(js['path']), js['map_num'], js['accuracy'],
+             js['competency'], js['report'], js['conf'])
         )
         db.commit()
         score = 5.0
@@ -248,6 +247,8 @@ def base_tutorial():
     competency_level = np.random.randint(0, 2)
     # choose a completion code for the user (hopefully this is random enough)
     completion_code = "NC-"+str(np.random.randint(111111111, 999999999))+"-HRT"
+    # get the client IP address
+    client_ip = str(request.remote_addr)
 
     level_0_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
     level_1_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
@@ -259,15 +260,14 @@ def base_tutorial():
     session['level'] = '-1'
     session['ctr'] = '0'
     session['score'] = '0'
-    import sys
-    print(sys.getsizeof(session))
 
     db = get_db()
     db.execute(
-        'UPDATE user SET accuracy=?, competency=?, code=? WHERE id = ?',
-        (accuracy_level, competency_level, completion_code, g.user['id'],))
+        'UPDATE user SET accuracy=?, competency=?, code=?, client_ip=? WHERE id = ?',
+        (accuracy_level, competency_level, completion_code, client_ip, g.user['id'],))
     db.commit()
     print("Setting up new participant:")
+    print("  IP addr={}".format(client_ip))
     print("  color_order={}".format([COLORS[x] for x in color_order]))
     print("  accuracy_level={}".format("accurate" if accuracy_level is 0 else "random"))
     print("  competency_level={}".format("accurate" if competency_level is 0 else "random"))
