@@ -161,8 +161,8 @@ def endgame():
         score = 5.0
         if js['outcome'] == 'ABORT':
             score -= 3.0
-        if int(js['human']) > 0:
-            score -= int(js['human'])*0.1
+        if int(js['h_steps']) > 0:
+            score -= int(js['h_steps'])*0.1
         if js['outcome'] == 'DEAD':
             score = 0.0
         if score <= 0.0:

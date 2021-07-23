@@ -256,7 +256,6 @@
     // Abort the mission.
     //
     function abortMission() {
-      robot_path.push(["E", (agent.x/cell_size).toString(), (agent.y/cell_size).toString()])
       document.getElementById("h_button").style.background = 'lightgrey';
       document.getElementById("r_button").style.background = 'lightgrey';
       document.getElementById("a_button").style.background = 'green';
