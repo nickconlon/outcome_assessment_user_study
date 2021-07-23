@@ -141,14 +141,11 @@
     //
     // Data to save and return to db
     //
-    var number_human_moves = 0
-    var number_agent_moves = 0
     var game_outcome = ""
     var total_mission_time = new Date().getTime()
     var total_mission_steps = 0
-    var number_interventions = 0
-    var number_steps_during_intervention = 0
-    var intervention_location = []
+    var robot_path = []
+    var human_steps = 0
 
     // 0=right, 1=left, 2=up, 3=down
     //const actions = [{x: cell_size, y:0}, {x: -cell_size, y:0}, {x:0, y:-cell_size}, {x:0, y:cell_size}]
@@ -188,21 +185,18 @@
     function main() {
         ended = has_game_ended()
         if (ended.status & !(state === DONE)) {
+          robot_path.push([ended.outcome, (agent.x/cell_size).toString(), (agent.y/cell_size).toString()])
           state = DONE
           // gather stuff to return to the database.
-          console.log({'human': number_human_moves, 'agent': number_agent_moves})
           total_mission_time = (new Date().getTime() - total_mission_time)/1000
           total_mission_time = Math.round(total_mission_time)
           game_outcome = ended.outcome
           var postData = {
-            human: number_human_moves,
-            agent: number_agent_moves,
             outcome: game_outcome,
             t_mission_time: total_mission_time,
             t_mission_steps: total_mission_steps,
-            n_interventions: number_interventions,
-            n_steps_interventions: number_steps_during_intervention,
-            intervention_loc: intervention_location,
+            h_steps: human_steps,
+            path: robot_path,
             competency: competency_level,
             accuracy: accuracy_level,
             report: report_level,
@@ -223,11 +217,12 @@
 
         move_time = 1000
         if (state === AGENT) {
+          robot_path.push(["A", (agent.x/cell_size).toString(), (agent.y/cell_size).toString()])
           drive_agent("policy")
           move_time = 500
         }
         else if (state === HUMAN) {
-          number_steps_during_intervention ++
+          robot_path.push(["H", (agent.x/cell_size).toString(), (agent.y/cell_size).toString()])
           move_time = 1000
         }
 
@@ -241,10 +236,6 @@
     // Allow the human to drive.
     //
     function humanDrive() {
-      if(state == AGENT || state == START) {
-        number_interventions ++
-        intervention_location.push([agent.x/cell_size, agent.y/cell_size])
-      }
       document.getElementById("h_button").style.background = 'green';
       document.getElementById("r_button").style.background = 'lightgrey';
       document.getElementById("a_button").style.background = 'lightgrey';
@@ -255,9 +246,6 @@
     // Allow the agent to drive.
     //
     function agentDrive() {
-      if(state == HUMAN) {
-        intervention_location.push([agent.x/cell_size, agent.y/cell_size])
-      }
       document.getElementById("h_button").style.background = 'lightgrey';
       document.getElementById("r_button").style.background = 'green';
       document.getElementById("a_button").style.background = 'lightgrey';
@@ -268,7 +256,7 @@
     // Abort the mission.
     //
     function abortMission() {
-      intervention_location.push([agent.x/cell_size, agent.y/cell_size])
+      robot_path.push(["E", (agent.x/cell_size).toString(), (agent.y/cell_size).toString()])
       document.getElementById("h_button").style.background = 'lightgrey';
       document.getElementById("r_button").style.background = 'lightgrey';
       document.getElementById("a_button").style.background = 'green';
@@ -424,7 +412,7 @@
       {
         dx = actions[action].x;
         dy = actions[action].y;
-        number_human_moves += 1;
+        human_steps +=1
         move_agent();
       }
     }
@@ -497,7 +485,6 @@
     // Drive the agent somewhere.
     //
     function drive_agent(type) {
-      number_agent_moves += 1;
       let x_diff = agent.x - goal[segment].x
       let y_diff = agent.y - goal[segment].y
 
