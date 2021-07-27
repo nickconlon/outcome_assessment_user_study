@@ -1,47 +1,151 @@
 {% extends 'base.html' %}
 
-
-
 {% block content %}
   <form action="/trust_question" method="POST" id="myform">
-      On a scale from 0-5, how much to you trust the {{ post.color }} robot?
+    The {{ post.color }} robot possesses good decision making ability.
     <div class="radioGroup">
-        No trust
-        <label for="0">0<br />
-            <input type="radio" name="mark" id="0" value="0" required/>
+        <label for="q1_0">Disagree Strongly<br />
+            <input type="radio" name="decision_making_ability" id="q1_0" value="0" required/>
         </label>
-        <label for="1">1<br />
-            <input type="radio" name="mark" id="1" value="1" />
+        <label for="q1_1">Disagree<br />
+            <input type="radio" name="decision_making_ability" id="q1_1" value="1" />
         </label>
-        <label for="2">2<br />
-            <input type="radio" name="mark" id="2" value="2" />
+        <label for="q1_2">Neutral<br />
+            <input type="radio" name="decision_making_ability" id="q1_2" value="2" />
         </label>
-        <label for="3">3<br />
-            <input type="radio" name="mark" id="3" value="3" />
+        <label for="q1_3">Agree<br />
+            <input type="radio" name="decision_making_ability" id="q1_3" value="3" />
         </label>
-        <label for="4">4<br />
-            <input type="radio" name="mark" id="4" value="4" />
+        <label for="q1_4">Strongly Agree<br />
+            <input type="radio" name="decision_making_ability" id="q1_4" value="4" />
         </label>
-        <label for="5">5<br />
-            <input type="radio" name="mark" id="5" value="5" />
-        </label>
-        Strong trust
     </div>
+    I received enough information about the {{ post.color }} robot's decision making process.
+    <div class="radioGroup">
+        <label for="q2_0">Disagree Strongly<br />
+            <input type="radio" name="decision_making_process" id="q2_0" value="0" required/>
+        </label>
+        <label for="q2_1">Disagree<br />
+            <input type="radio" name="decision_making_process" id="q2_1" value="1" />
+        </label>
+        <label for="q2_2">Neutral<br />
+            <input type="radio" name="decision_making_process" id="q2_2" value="2" />
+        </label>
+        <label for="q2_3">Agree<br />
+            <input type="radio" name="decision_making_process" id="q2_3" value="3" />
+        </label>
+        <label for="q2_4">Strongly Agree<br />
+            <input type="radio" name="decision_making_process" id="q2_4" value="4" />
+        </label>
+    </div>
+    I received enough information about the {{ post.color }} robot's plan to navigate the maze.
+    <div class="radioGroup">
+        <label for="q3_0">Disagree Strongly<br />
+            <input type="radio" name="robots_plan" id="q3_0" value="0" required/>
+        </label>
+        <label for="q3_1">Disagree<br />
+            <input type="radio" name="robots_plan" id="q3_1" value="1" />
+        </label>
+        <label for="q3_2">Neutral<br />
+            <input type="radio" name="robots_plan" id="q3_2" value="2" />
+        </label>
+        <label for="q3_3">Agree<br />
+            <input type="radio" name="robots_plan" id="q3_3" value="3" />
+        </label>
+        <label for="q3_4">Strongly Agree<br />
+            <input type="radio" name="robots_plan" id="q3_4" value="4" />
+        </label>
+    </div>
+    I trust the {{ post.color }} robot to navigate in the maze.
+    <div class="radioGroup">
+        <label for="q4_0">Disagree Strongly<br />
+            <input type="radio" name="robots_navigate" id="q4_0" value="0" required/>
+        </label>
+        <label for="q4_1">Disagree<br />
+            <input type="radio" name="robots_navigate" id="q4_1" value="1" />
+        </label>
+        <label for="q4_2">Neutral<br />
+            <input type="radio" name="robots_navigate" id="q4_2" value="2" />
+        </label>
+        <label for="q4_3">Agree<br />
+            <input type="radio" name="robots_navigate" id="q4_3" value="3" />
+        </label>
+        <label for="q4_4">Strongly Agree<br />
+            <input type="radio" name="robots_navigate" id="q4_4" value="4" />
+        </label>
+    </div>      
+    I trust the {{ post.color }} robot to function correctly in the maze.
+    <div class="radioGroup">
+        <label for="q5_0">Disagree Strongly<br />
+            <input type="radio" name="functioning" id="q5_0" value="0" required/>
+        </label>
+        <label for="q5_1">Disagree<br />
+            <input type="radio" name="functioning" id="q5_1" value="1" />
+        </label>
+        <label for="q5_2">Neutral<br />
+            <input type="radio" name="functioning" id="q5_2" value="2" />
+        </label>
+        <label for="q5_3">Agree<br />
+            <input type="radio" name="functioning" id="q5_3" value="3" />
+        </label>
+        <label for="q5_4">Strongly Agree<br />
+            <input type="radio" name="functioning" id="q5_4" value="4" />
+        </label>
+    </div>    
+    I trust the {{ post.color }} robot to perform to the best of it's abilities.
+    <div class="radioGroup">
+        <label for="q6_0">Disagree Strongly<br />
+            <input type="radio" name="performance" id="q6_0" value="0" required/>
+        </label>
+        <label for="q6_1">Disagree<br />
+            <input type="radio" name="performance" id="q6_1" value="1" />
+        </label>
+        <label for="q6_2">Neutral<br />
+            <input type="radio" name="performance" id="q6_2" value="2" />
+        </label>
+        <label for="q6_3">Agree<br />
+            <input type="radio" name="performance" id="q6_3" value="3" />
+        </label>
+        <label for="q6_4">Strongly Agree<br />
+            <input type="radio" name="performance" id="q6_4" value="4" />
+        </label>
+    </div>
+      {% if post.level == 1 %}
+      I trust the {{ post.color }} robot to give accurate self-confidence reports.
+    <div class="radioGroup">
+        <label for="q7_0">Disagree Strongly<br />
+            <input type="radio" name="confidence" id="q7_0" value="0" required/>
+        </label>
+        <label for="q7_1">Disagree<br />
+            <input type="radio" name="confidence" id="q7_1" value="1" />
+        </label>
+        <label for="q7_2">Neutral<br />
+            <input type="radio" name="confidence" id="q7_2" value="2" />
+        </label>
+        <label for="q7_3">Agree<br />
+            <input type="radio" name="confidence" id="q7_3" value="3" />
+        </label>
+        <label for="q7_4">Strongly Agree<br />
+            <input type="radio" name="confidence" id="q7_4" value="4" />
+        </label>
+    </div>
+      {% endif %}
       <input type="submit" value="Submit">
   </form>
 
 <style>
    .radioGroup label {
-  display: inline-block;
-  margin: 0 0.2em;
-  text-align: center;
-  padding-top: 5%;
+      display: inline-block;
+      margin: 0 0.2em;
+      text-align: center;
+      padding-bottom: 2%;
+      font-size: 15px;
 }
 
 #myform {
-        text-align: center;
+        text-align: left;
         padding-top: 5%;
-        font-size: 20;
+        font-size: 25px;
 }
 </style>
 
