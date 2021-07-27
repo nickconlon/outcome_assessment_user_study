@@ -6,16 +6,7 @@
   {% if g.user %}
    <form action="/open_question" method="POST" id="myform">
     <p><b>What age are you?</b></p>
-    <labl for="a1">18-24</labl>
-    <input type="radio" name="age" id="a1" value="18-24" required>
-    <labl for="a2">25-34</labl>
-    <input type="radio" name="age" id="a2" value="25-34" required>
-    <labl for="a3">35-44</labl>
-    <input type="radio" name="age" id="a3" value="35-44" required>
-    <labl for="a4">45-54</labl>
-    <input type="radio" name="age" id="a4" value="45-55" required>
-    <labl for="a4">55+</labl>
-    <input type="radio" name="age" id="a5" value="55+" required>
+    <input type="text" name="age" id="age" size="10" required>
 
     <p><b>What gender are you?</b></p>
     <labl for="g1">Female</labl>
@@ -41,14 +32,7 @@
     <labl for="e6">Graduate Degree (Masters, Phd, MD, etc.)</labl>
     <input type="radio" name="education" id="e6" value="graduate" required>
 
-    <p><b>Do you play video games?</b></p>
-    <labl for="games1">No</labl>
-    <input type="radio" name="games" id="games1" value="no" required>
-    <labl for="games2">Yes</labl>
-    <input type="radio" name="games" id="games2" value="yes" required>
-
-
-     <p><b>Use this area to let us know your thoughts on the study</b></p>
+     <p><b>Use this area to let us know your (optional) thoughts on the study</b></p>
      <label for="open"></label>
        <textarea id="open" name="open_text" rows="5" cols="50"> </textarea>
 

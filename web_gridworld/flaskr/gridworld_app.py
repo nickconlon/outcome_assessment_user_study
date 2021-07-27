@@ -48,9 +48,9 @@ def prescreen():
 @login_required
 def playgame():
     db = get_db()
-    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-    accuracy_level = u[2]
-    competency_level = u[3]
+    u = db.execute('SELECT accuracy, competency FROM user WHERE id = ?', (g.user['id'],)).fetchone()
+    accuracy_level = u[0]
+    competency_level = u[1]
     report_level = session['level']
     report_level = session['l_order'][int(report_level)]
     confidence = ""
@@ -215,19 +215,22 @@ def trust_question():
         confidence = request.form['confidence']
     js = dm_ability+dm_process+plan+navigation+functioning+performance+confidence
     print(js)
-    if session['l_order'][int(session['level'])] == '1':
+    if session['level'] == '1':
+        db = get_db()
+        db.execute('UPDATE user SET practice_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.commit()
         return render_template('gridworld_app/tutorial1.html', post={})
-    elif session['l_order'][int(session['level'])] == '2':
+    elif session['level'] == '2':
         db = get_db()
         db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
         return render_template('gridworld_app/tutorial2.html', post={})
-    elif session['l_order'][int(session['level'])] == '3':
+    elif session['level'] == '3':
         db = get_db()
         db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
         return render_template('gridworld_app/tutorial3.html', post={})
-    elif session['l_order'][int(session['level'])] == '4':
+    elif session['level'] == '4':
         db = get_db()
         db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
@@ -242,16 +245,15 @@ def open_question():
         age = request.form['age']
         gender = request.form['gender']
         education = request.form['education']
-        games = request.form['games']
 
         db = get_db()
-        db.execute('UPDATE user SET open_question=?, age=?, gender=?, education=?, games=? WHERE id = ?',
-                   (open_q, age, gender, education, games, g.user['id'],))
+        db.execute('UPDATE user SET open_question=?, age=?, gender=?, education=? WHERE id = ?',
+                   (open_q, age, gender, education, g.user['id'],))
         db.commit()
 
     db = get_db()
-    u = db.execute('SELECT * FROM user WHERE id = ?', (g.user['id'],)).fetchone()
-    completion_code = u[9]
+    u = db.execute('SELECT code FROM user WHERE id = ?', (g.user['id'],)).fetchone()
+    completion_code = u[0]
     session.clear()
     return render_template('gridworld_app/thank_you.html', post={'code': completion_code})
 

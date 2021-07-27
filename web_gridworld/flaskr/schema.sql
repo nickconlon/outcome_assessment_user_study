@@ -3,10 +3,10 @@ DROP TABLE IF EXISTS post;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  run_counter INTEGER NOT NULL DEFAULT 0,
   accuracy INTEGER,
   competency INTEGER,
   username TEXT UNIQUE NOT NULL,
+  practice_trust TEXT,  
   first_trust TEXT,
   second_trust TEXT,
   third_trust TEXT,
@@ -17,8 +17,6 @@ CREATE TABLE user (
   age TEXT,
   gender TEXT,
   education TEXT,
-  games TEXT,
-  latest_score INTEGER,
   client_ip TEXT,
   password TEXT NOT NULL
 );
