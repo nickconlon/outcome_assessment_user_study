@@ -57,11 +57,11 @@ def playgame():
 
     if report_level == '0':
         map_number = '0'
-        color = int(session['c_order'][0])
+        color = int(session['c_order'][int(session['c_ctr'])])
         map_path = os.path.join(APP_PATH,"flaskr/maps/map0")
     else:
         map_number = session['l' + report_level + '_order'][int(session['ctr'])]
-        color = int(session['c_order'][int(report_level)])
+        color = int(session['c_order'][int(session['c_ctr'])])
         map_path = os.path.join(APP_PATH,"flaskr/maps/level_" + report_level + "/map" + map_number)
 
         if int(report_level) == 2:
@@ -188,12 +188,14 @@ def endgame():
 @login_required
 def outcome():
     if session['ctr'] == '0':
-        color_idx = int(np.max(int(session['level'])-1, 0))
-        color = int(session['c_order'][color_idx])
+        color = int(session['c_order'][int(session['c_ctr'])])
         color = COLORS[color]
         level = int(session['l_order'][int(session['level'])-1]) >= 2
+        print("color "+session['c_order'])
         print(int(session['l_order'][int(session['level'])-1]))
+        print("order "+session['l_order'])
         print("level  "+session['level'])
+        session['c_ctr'] = str(int(session['c_ctr'])+1)
         post = {"color": color, "level": int(level)}
         return render_template('gridworld_app/trust.html', post=post)
     return playgame()
@@ -281,6 +283,7 @@ def base_tutorial():
     session['level'] = '0'
     session['ctr'] = '0'
     session['score'] = '0'
+    session['c_ctr'] = '0'
 
     db = get_db()
     db.execute(
