@@ -188,12 +188,12 @@ def endgame():
 @login_required
 def outcome():
     if session['ctr'] == '0':
-        color_idx = int(np.max(int(session['level']) - 1, 0))
+        color_idx = int(np.max(int(session['level'])-1, 0))
         color = int(session['c_order'][color_idx])
         color = COLORS[color]
-        level = int(session['l_order'][int(session['level'])]) > 2
-        print(int(session['l_order'][int(session['level'])]))
-        print(level)
+        level = int(session['l_order'][int(session['level'])-1]) >= 2
+        print(int(session['l_order'][int(session['level'])-1]))
+        print("level  "+session['level'])
         post = {"color": color, "level": int(level)}
         return render_template('gridworld_app/trust.html', post=post)
     return playgame()
@@ -258,7 +258,7 @@ def open_question():
 @login_required
 def base_tutorial():
     # choose color order from [red, green, blue]
-    color_order = np.random.choice([0, 1, 2, ], 3, replace=False)
+    color_order = np.random.choice([0, 1, 2, 3], 4, replace=False)
     # choose accuracy level from [accurate, random]
     accuracy_level = np.random.randint(0, 2)
     # choose competency level from [competent, random]
@@ -276,7 +276,7 @@ def base_tutorial():
     session['l1_order'] = "".join([str(x) for x in level_0_map_order])
     session['l2_order'] = "".join([str(x) for x in level_1_map_order])
     session['l3_order'] = "".join([str(x) for x in level_2_map_order])
-    session['c_order'] = str(color_order[0])+"".join([str(x) for x in color_order])
+    session['c_order'] = "".join([str(x) for x in color_order])
     session['l_order'] = '0'+"".join([str(x) for x in level_order])+"4"
     session['level'] = '0'
     session['ctr'] = '0'

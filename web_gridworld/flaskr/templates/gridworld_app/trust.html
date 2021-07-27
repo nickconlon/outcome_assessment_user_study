@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div style="text-align:center; border:5px solid #555">
+      <img src="../../static/images/robot_{{ post.color }}.png" alt="" />
+    </div>
   <form action="/trust_question" method="POST" id="myform">
     The {{ post.color }} robot possesses good decision making ability.
     <div class="radioGroup">
