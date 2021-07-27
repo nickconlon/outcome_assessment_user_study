@@ -1,7 +1,7 @@
 oooooooooooooooooooooooooooooo
-oa--o--------d-g-d-----------o
-o--d-d----dggr--------------go
-o--oooooooooggooooooog-ooooooo
-o---g-------g-------d--dg-o--o
-od--odo--gg---o-d--o-g-----gGo
+oa-----dgd-g-----d-------od--o
+o-----------ooo------gg------o
+o--ooooooooo-gooooooogdooooooo
+o---d----d--g------od-g---o-go
+o----dg------gog---g-d------Go
 oooooooooooooooooooooooooooooo

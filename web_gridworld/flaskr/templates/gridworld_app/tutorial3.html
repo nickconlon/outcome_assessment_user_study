@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+  <br><br>
+  <div>
+      You have been teamed with a new robot. This robot is capable of sending you a report telling you it's <b>self-confidence</b>
+      in driving (in Automatic Mode) to an intermediate location denoted by a blue square, and it's <b>self-confidence</b>
+      in driving from that intermediate location to the finish. This new report will be displayed right above the maze.
+  </div>
+  <br><br>
+    <div style="text-align:center; border:5px solid #555">
+      <img src="static/images/control_panel_3.png" alt="" />
+    </div>
+  {% if g.user %}
+    <div id="button">
+    <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the next round</a>
+    </div>
+  {% endif %}
+
+  <style>
+    #button {
+      text-align: center;
+      font-size: 50px;
+    }
+  </style>
+{% endblock %}

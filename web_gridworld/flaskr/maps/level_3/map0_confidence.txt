@@ -1,0 +1,1 @@
+<b>Report:</b> The robot has <b>Fair confidence</b> in navigating to the blue square, and <b>Fair confidence</b> in navigating from the blue square to the green square.

@@ -12,8 +12,9 @@ bp = Blueprint('gridworld_app', __name__)
 
 MAPS_PER_LEVEL = 4
 MAX_MAPS_PER_LEVEL = 5
+NUM_LEVELS = 3
 
-COLORS = ['red', 'green', 'blue']
+COLORS = ['red', 'green', 'blue', 'black']
 CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
 APP_PATH = "/var/www/html/web_gridworld/web_gridworld"
 
@@ -51,42 +52,43 @@ def playgame():
     accuracy_level = u[2]
     competency_level = u[3]
     report_level = session['level']
+    report_level = session['l_order'][int(report_level)]
     confidence = ""
 
-    if int(report_level) > -1:
-        map_number = session['l' + report_level + '_order'][int(session['ctr'])]
-        color = int(session['c_order'][int(report_level)])
-        map_path = os.path.join(APP_PATH,"flaskr/maps/level_" + report_level + "/map" + map_number)
-    else:
+    if report_level == '0':
         map_number = '0'
         color = int(session['c_order'][0])
         map_path = os.path.join(APP_PATH,"flaskr/maps/map0")
+    else:
+        map_number = session['l' + report_level + '_order'][int(session['ctr'])]
+        color = int(session['c_order'][int(report_level)])
+        map_path = os.path.join(APP_PATH,"flaskr/maps/level_" + report_level + "/map" + map_number)
 
-    if int(report_level) == 1:
-        if accuracy_level == 0:
-            with open(map_path + "_confidence.txt") as file:
-                for line in file.readlines():
-                    confidence = line.strip()
-                    break
-        else:
-            # randomize confidence statement
-            rand_conf = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
-            confidence = "<b>Report:</b> The robot has <b>" + rand_conf \
-                         + " confidence</b> in navigating to the green square."
-    elif int(report_level) == 2:
-        if accuracy_level == 0:
+        if int(report_level) == 2:
+            if accuracy_level == 0:
+                with open(map_path + "_confidence.txt") as file:
+                    for line in file.readlines():
+                        confidence = line.strip()
+                        break
+            else:
+                # randomize confidence statement
+                rand_conf = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
+                confidence = "<b>Report:</b> The robot has <b>" + rand_conf \
+                             + " confidence</b> in navigating to the green square."
+        elif int(report_level) == 3:
+            if accuracy_level == 0:
 
-            with open(map_path + "_confidence.txt") as file:
-                for line in file.readlines():
-                    confidence = line.strip()
-                    break
-        else:
-            # randomize confidence statement
-            rand_conf1 = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
-            rand_conf2 = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
-            confidence = "<b>Report:</b> The robot has <b>" + rand_conf1 \
-                         + " confidence</b> in navigating to the blue square, and <b>" + rand_conf2 \
-                         + " confidence </b> in navigating from the blue square to the green square."
+                with open(map_path + "_confidence.txt") as file:
+                    for line in file.readlines():
+                        confidence = line.strip()
+                        break
+            else:
+                # randomize confidence statement
+                rand_conf1 = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
+                rand_conf2 = CONFIDENCES[np.random.randint(0, len(CONFIDENCES))]
+                confidence = "<b>Report:</b> The robot has <b>" + rand_conf1 \
+                             + " confidence</b> in navigating to the blue square, and <b>" + rand_conf2 \
+                             + " confidence </b> in navigating from the blue square to the green square."
 
     confidence = confidence.replace('robot', '<u>' + COLORS[color] + ' robot</u>')
     obstacles = []
@@ -170,7 +172,11 @@ def endgame():
 
         session['score'] = str(score)
         session['ctr'] = str(int(session['ctr']) + 1)
-        if int(session['ctr']) % MAPS_PER_LEVEL == 0 or session['level'] == '-1':
+        if session['level'] == '0':
+            session['level'] = '1'
+            session['ctr'] = '0'
+            print("changing level")
+        elif int(session['ctr']) % MAPS_PER_LEVEL == 0:
             session['level'] = str(int(session['level']) + 1)
             session['ctr'] = '0'
             print("changing level")
@@ -185,7 +191,10 @@ def outcome():
         color_idx = int(np.max(int(session['level']) - 1, 0))
         color = int(session['c_order'][color_idx])
         color = COLORS[color]
-        post = {"color": color}
+        level = int(session['l_order'][int(session['level'])]) > 2
+        print(int(session['l_order'][int(session['level'])]))
+        print(level)
+        post = {"color": color, "level": int(level)}
         return render_template('gridworld_app/trust.html', post=post)
     return playgame()
 
@@ -193,25 +202,34 @@ def outcome():
 @bp.route('/trust_question', methods=('POST',))
 @login_required
 def trust_question():
-    js = request.form['mark']
-    post = {}
-    if session['level'] == '0':
-        return playgame()
-    elif session['level'] == '1':
+    dm_ability = request.form['decision_making_ability']
+    dm_process = request.form['decision_making_process']
+    plan = request.form['robots_plan']
+    navigation = request.form['robots_navigate']
+    functioning = request.form['functioning']
+    performance = request.form['performance']
+    confidence = '-'
+    if 'confidence' in request.form:
+        confidence = request.form['confidence']
+    js = dm_ability+dm_process+plan+navigation+functioning+performance+confidence
+    print(js)
+    if session['l_order'][int(session['level'])] == '1':
+        return render_template('gridworld_app/tutorial1.html', post={})
+    elif session['l_order'][int(session['level'])] == '2':
         db = get_db()
         db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial1.html', post=post)
-    elif session['level'] == '2':
+        return render_template('gridworld_app/tutorial2.html', post={})
+    elif session['l_order'][int(session['level'])] == '3':
         db = get_db()
         db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial2.html', post=post)
-    elif session['level'] == '3':
+        return render_template('gridworld_app/tutorial3.html', post={})
+    elif session['l_order'][int(session['level'])] == '4':
         db = get_db()
         db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/open_question.html', post=post)
+        return render_template('gridworld_app/open_question.html', post={})
 
 
 @bp.route('/open_question', methods=('GET', 'POST'))
@@ -253,11 +271,14 @@ def base_tutorial():
     level_0_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
     level_1_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
     level_2_map_order = np.random.choice(np.arange(0, MAX_MAPS_PER_LEVEL), MAPS_PER_LEVEL, replace=False)
-    session['l0_order'] = "".join([str(x) for x in level_0_map_order])
-    session['l1_order'] = "".join([str(x) for x in level_1_map_order])
-    session['l2_order'] = "".join([str(x) for x in level_2_map_order])
-    session['c_order'] = "".join([str(x) for x in color_order])
-    session['level'] = '-1'
+    level_order = np.random.choice(np.arange(1, NUM_LEVELS+1), NUM_LEVELS, replace=False)
+
+    session['l1_order'] = "".join([str(x) for x in level_0_map_order])
+    session['l2_order'] = "".join([str(x) for x in level_1_map_order])
+    session['l3_order'] = "".join([str(x) for x in level_2_map_order])
+    session['c_order'] = str(color_order[0])+"".join([str(x) for x in color_order])
+    session['l_order'] = '0'+"".join([str(x) for x in level_order])+"4"
+    session['level'] = '0'
     session['ctr'] = '0'
     session['score'] = '0'
 
@@ -272,6 +293,7 @@ def base_tutorial():
     print("  accuracy_level={}".format("accurate" if accuracy_level == 0 else "random"))
     print("  competency_level={}".format("accurate" if competency_level == 0 else "random"))
     print("  completion_code={}".format(completion_code))
+    print("  level_order={}".format(session['l_order']))
 
     post = {'title': 'tutorial'}
     return render_template('gridworld_app/base_tutorial.html', post=post)
