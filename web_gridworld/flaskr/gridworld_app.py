@@ -215,21 +215,22 @@ def trust_question():
         confidence = request.form['confidence']
     js = dm_ability+dm_process+plan+navigation+functioning+performance+confidence
     print(js)
+    tutorial = session['l_order'][int(session['level'])]
     if session['level'] == '1':
         db = get_db()
         db.execute('UPDATE user SET practice_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial1.html', post={})
+        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={})
     elif session['level'] == '2':
         db = get_db()
         db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial2.html', post={})
+        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={})
     elif session['level'] == '3':
         db = get_db()
         db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial3.html', post={})
+        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={})
     elif session['level'] == '4':
         db = get_db()
         db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (js, g.user['id'],))
