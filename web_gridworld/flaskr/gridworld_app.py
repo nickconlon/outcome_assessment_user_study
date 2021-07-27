@@ -6,6 +6,7 @@ from werkzeug.exceptions import abort
 from .auth import login_required
 from .db import get_db
 import numpy as np
+import os
 
 bp = Blueprint('gridworld_app', __name__)
 
@@ -15,7 +16,7 @@ NUM_LEVELS = 3
 
 COLORS = ['red', 'green', 'blue', 'black']
 CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
-
+APP_PATH = "/var/www/html/web_gridworld/web_gridworld"
 
 @bp.route('/')
 def index():
@@ -56,12 +57,12 @@ def playgame():
 
     if report_level == '0':
         map_number = '0'
-        color = int(session['c_order'][0])
-        map_path = "flaskr/maps/map0"
+        color = int(session['c_order'][int(session['c_ctr'])])
+        map_path = os.path.join(APP_PATH,"flaskr/maps/map0")
     else:
         map_number = session['l' + report_level + '_order'][int(session['ctr'])]
-        color = int(session['c_order'][int(session['level'])])
-        map_path = "flaskr/maps/level_" + report_level + "/map" + map_number
+        color = int(session['c_order'][int(session['c_ctr'])])
+        map_path = os.path.join(APP_PATH,"flaskr/maps/level_" + report_level + "/map" + map_number)
 
         if int(report_level) == 2:
             if accuracy_level == 0:
@@ -161,9 +162,9 @@ def endgame():
         db.commit()
         score = 5.0
         if js['outcome'] == 'ABORT':
-            score = 2.0
+            score -= 3.0
         if int(js['h_steps']) > 0:
-            score = 5-int(js['h_steps'])*0.01
+            score -= int(js['h_steps'])*0.1
         if js['outcome'] == 'DEAD':
             score = 0.0
         if score <= 0.0:
@@ -187,12 +188,14 @@ def endgame():
 @login_required
 def outcome():
     if session['ctr'] == '0':
-        color_idx = int(np.max(int(session['level'])-1, 0))
-        color = int(session['c_order'][color_idx])
+        color = int(session['c_order'][int(session['c_ctr'])])
         color = COLORS[color]
         level = int(session['l_order'][int(session['level'])-1]) >= 2
+        print("color "+session['c_order'])
         print(int(session['l_order'][int(session['level'])-1]))
+        print("order "+session['l_order'])
         print("level  "+session['level'])
+        session['c_ctr'] = str(int(session['c_ctr'])+1)
         post = {"color": color, "level": int(level)}
         return render_template('gridworld_app/trust.html', post=post)
     return playgame()
@@ -280,6 +283,7 @@ def base_tutorial():
     session['level'] = '0'
     session['ctr'] = '0'
     session['score'] = '0'
+    session['c_ctr'] = '0'
 
     db = get_db()
     db.execute(
@@ -289,8 +293,8 @@ def base_tutorial():
     print("Setting up new participant:")
     print("  IP addr={}".format(client_ip))
     print("  color_order={}".format([COLORS[x] for x in color_order]))
-    print("  accuracy_level={}".format("accurate" if accuracy_level is 0 else "random"))
-    print("  competency_level={}".format("accurate" if competency_level is 0 else "random"))
+    print("  accuracy_level={}".format("accurate" if accuracy_level == 0 else "random"))
+    print("  competency_level={}".format("accurate" if competency_level == 0 else "random"))
     print("  completion_code={}".format(completion_code))
     print("  level_order={}".format(session['l_order']))
 
