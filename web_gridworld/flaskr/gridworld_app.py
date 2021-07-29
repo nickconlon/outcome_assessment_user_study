@@ -15,7 +15,7 @@ MAX_MAPS_PER_LEVEL = 5
 NUM_LEVELS = 3
 
 COLORS = ['red', 'green', 'blue', 'black']
-CONFIDENCES = ["Very Bad", "Bad", "Fair", "Good", "Very good"]
+CONFIDENCES = ["very bad", "bad", "fair", "good", "very good"]
 APP_PATH = "/var/www/html/web_gridworld/web_gridworld"
 
 @bp.route('/')
