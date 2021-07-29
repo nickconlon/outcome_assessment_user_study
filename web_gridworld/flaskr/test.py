@@ -30,6 +30,19 @@ def dump():
     # Be sure to close the connection
     con.close()
 
+def del_entry(id):
+    # Create a SQL connection to our SQLite database
+    con = sqlite3.connect("../../instance/flaskr.sqlite")
+
+    cur = con.cursor()
+
+    # The result of a "cursor.execute" can be iterated over by row
+    cur.execute('DELETE FROM user where id=?', (id,))
+    cur.execute('DELETE FROM results where id=?', (id,))
+
+    # Be sure to close the connection
+    con.close()
+
 if __name__ == "__main__":
     dump()
     #cleanup()
