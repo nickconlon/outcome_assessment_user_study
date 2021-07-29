@@ -5,10 +5,11 @@
     <h2>Please <u>do not press the back button at any time</u> during this study.</h2>
     <br>
     <h3>Overview:</h3>
-    <h4>During this study you will be faced with a set of mazes of varying difficulty and paired with a robot of varying capability. At any time you may choose how the robot is
-    controlled: you can drive the robot, or let the robot automatically drive to the finish. You will have to watch out for dangers in the
-    maze. Your view of the mazes, and control you have of the robot will be limited, so you must work together with your
-    new robot partner to complete each maze.</h4>
+    <h4>During this study you will be faced with a set of mazes of varying difficulty and paired with a robot of varying capability.
+      At any time you may choose how the robot is controlled: you can drive the robot (Manual control), or let the robot
+      automatically drive (Automatic control). You will have to watch out for driving over dangers which could make you and the robot fail
+      the maze. Your view of the mazes, and control you have of the robot will be limited, so you must work together
+      with your new robot partner to complete each maze.</h4>
   </div>
   <div>
     <h3>You will be presented with a display to help navigate the maze:</h3>
@@ -22,14 +23,14 @@
       <img src="static/images/manual_control.gif" alt="" />
     </div>
 
-    <h3>At any time during the maze, have the robot drive itself to the finish (to the best of its ability) by selecting Automatic Control. You can end Automatic
+    <h3>At any time during the maze, let the robot drive itself to the finish (to the best of its ability) by selecting Automatic Control. You can end Automatic
       Control at any time by pressing the Manual Control button:</h3>
     <div style="text-align:center; border:5px solid #555">
       <img src="static/images/automatic_control.gif" alt="" />
     </div>
 
     <br><br>
-    <h3>There will be glass like debris in the maze. If the robot is driving in Automatic Control and it drives over this debris, it could move randomly in any direction:</h3>
+    <h3>There will be glass like debris in the maze. If the robot is driving in Automatic Control, and it drives over this debris, it could move randomly in any direction:</h3>
     <div style="text-align:center; border:5px solid #555">
       <img src="static/images/glass.gif" alt="" />
     </div>
@@ -49,7 +50,7 @@
     <br><br>
     <h3>Scoring</h3>
     <h4>You will receive a score based on how well you and the robot perform on each maze. At the end of the HIT you will be
-    paid a bonus of up to $0.60 based on your final score and the effort you put into the experiment. Each maze is worth
+    paid a bonus based on your final score and the effort you put into the experiment. Each maze is worth
     5 bonus points. <u>Your goal should be to maximize points based on the below scoring breakdown:</u></h4>
     <ul>
       <li><b>Fail maze (robot falls in a hole):</b> -5 points</li>
@@ -59,7 +60,7 @@
 
   </div>
   <br><br>
-  <h3>The first maze will be practice</h3>
+  <h3>The first maze is a practice maze:</h3>
   {% if g.user %}
     <div id="button">
     <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the first maze</a>
