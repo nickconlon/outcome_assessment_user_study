@@ -3,11 +3,21 @@
   {% block content %}
   <br><br>
   <div>
-      You have been teamed with a new robot. This robot is capable of sending you a report telling you it's <b>self-confidence</b>
-      in driving (in Automatic Mode) to an intermediate location denoted by a blue square, and it's <b>self-confidence</b>
-      in driving from that intermediate location to the finish. This new report will be displayed right above the maze.
+      <h4>You have been paired with a new robot.</h4>
+
+      <h4>This robot is capable of sending you a report telling you its <u>self-confidence</u> in driving to an
+        intermediate location denoted by a blue square, and its <u>self-confidence</u> in driving from that intermediate
+        location to the finish. <u>This statement is what the robot thinks its outcome will be if it drives in
+          Automatic Mode</u>. It can be: 'very bad', 'bad', 'fair', 'good', or 'very good'. For example:</h4>
+    <ul>
+      <li><h4>A report of <u>very bad</u> means the robot is certain it will fail the maze.</h4></li>
+      <li><h4>A report of <u>fair</u> means the robot thinks there is an equal chance for failure or success.</h4></li>
+      <li><h4>A report of <u>very good</u> means the robot is quite certain it will succeed in driving to the finish.</h4></li>
+    </ul>
+
+    <h4>Remember, this is the robot's estimate of how it thinks it will perform in the maze in Automatic Mode, not how it thinks you will
+    perform in Manual Mode. The report will be displayed just above the maze:</h4>
   </div>
-  <br><br>
     <div style="text-align:center; border:5px solid #555">
       <img src="static/images/control_panel_3.png" alt="" />
     </div>
