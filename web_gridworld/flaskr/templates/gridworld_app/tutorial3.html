@@ -2,32 +2,72 @@
 
   {% block content %}
   <br><br>
-  <div>
+  <div style="font-size: 25px">
       <h4>You have been paired with a new robot. In addition to Manual control, Automatic control, and Abort, it has the following capability:</h4>
 
-    <h4><u>Self-Confidence Report:</u> This statement is what the robot thinks its outcome will be if it drives in Automatic Mode to
+    <b>Self-Confidence Report:</b> This statement is what the robot thinks its outcome will be if it drives in Automatic Mode to
        an intermediate location denoted by the blue square, and it's outcome if it drives in Automatic Mode from that blue square to
-      the green square. It can be: 'very bad', 'bad', 'fair', 'good', or 'very good'. For example:</h4>
+      the green square. It can be: 'very bad', 'bad', 'fair', 'good', or 'very good'. For example:
 
     <ul>
-      <li><h4>A report of <u>very bad</u> means the robot is quite certain it will fail while driving to the location.</h4></li>
-      <li><h4>A report of <u>bad</u> means the robot thinks there is a high (but not certain) chance it will fail while driving to the location.</h4></li>
-      <li><h4>A report of <u>fair</u> means the robot thinks there is an equal chance for failure or success.</h4></li>
-      <li><h4>A report of <u>good</u> means the robot thinks there is a high (but not certain) chance it will succeed in driving to the location.</h4></li>
-      <li><h4>A report of <u>very good</u> means the robot is quite certain it will succeed in driving to the location.</h4></li>
+      <li><b>very bad</b> means the robot is <u>quite certain it will fail</u> while driving to a location.</li>
+      <li><b>bad</b> means the robot thinks there is a <u>high (but not certain) chance it will fail</u> while driving to a location.</li>
+      <li><b>fair</b> means the robot thinks there is an <u>equal chance for failure or success</u> while driving to a location.</li>
+      <li><b>good</b> means the robot thinks there is a <u>high (but not certain) chance it will succeed</u> in driving to a location.</li>
+      <li><b>very good</b> means the robot is <u>quite certain it will succeed</u> in driving to a location.</li>
     </ul>
 
-    <h4>Remember, this is the robot's estimate of how it thinks it will perform in the maze in Automatic Mode, not how it thinks you will
-    perform in Manual Mode. The report will be displayed just above the maze:</h4>
-  </div>
+    Remember, <b>this is the robot's estimate of how it thinks it will perform in the maze in Automatic Mode</b>, not how it thinks you will
+    perform in Manual Mode. The report will be displayed just above the maze:
+
     <div style="text-align:center; border:5px solid #555">
       <img src="static/images/control_panel_3.png" alt="" />
     </div>
-  {% if g.user %}
-    <div id="button">
-    <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the next round</a>
-    </div>
-  {% endif %}
+
+    <h3>
+      Please answer True or False to these questions about the instructions you just read:
+    </h3>
+    <form action="/quiz3" method="post">
+      <p><b>The robot has more information about the maze than you do.</b></p>
+      <labl for="info_t">True</labl>
+      <input type="radio" name="info" id="info_t" value="1" required>
+      <labl for="info_f">False</labl>
+      <input type="radio" name="info" id="info_f" value="0" required>
+
+      <p><b>We request that you choose false for this question.</b></p>
+      <labl for="false_t">True</labl>
+      <input type="radio" name="false" id="false_t" value="1" required>
+      <labl for="false_f">False</labl>
+      <input type="radio" name="false" id="false_f" value="0" required>
+
+      <p><b>This robot will report its self-confidence to you.</b></p>
+      <labl for="manual_t">True</labl>
+      <input type="radio" name="manual" id="manual_t" value="1" required>
+      <labl for="manual_f">False</labl>
+      <input type="radio" name="manual" id="manual_f" value="0" required>
+
+      <p><b>very bad self-confidence means the robot is quite sure it will fail driving to the location.</b></p>
+      <labl for="badConf_t">True</labl>
+      <input type="radio" name="badConf" id="badConf_t" value="1" required>
+      <labl for="badConf_f">False</labl>
+      <input type="radio" name="badConf" id="badConf_f" value="0" required>
+
+      <p><b>very good self-confidence means the robot is quite sure it will succeed driving to the location.</b></p>
+      <labl for="goodConf_t">True</labl>
+      <input type="radio" name="goodConf" id="goodConf_t" value="1" required>
+      <labl for="goodConf_f">False</labl>
+      <input type="radio" name="goodConf" id="goodConf_f" value="0" required>
+
+      <p><b>fair self-confidence means the robot thinks there is an equal chance for failure or success.</b></p>
+      <labl for="fairConf_t">True</labl>
+      <input type="radio" name="fairConf" id="fairConf_t" value="1" required>
+      <labl for="fairConf_f">False</labl>
+      <input type="radio" name="fairConf" id="fairConf_f" value="0" required>
+
+      <br><br>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
 
   <style>
     #button {

@@ -305,6 +305,29 @@ def base_tutorial():
     return render_template('gridworld_app/base_tutorial.html', post=post)
 
 
+@bp.route('/base_quiz', methods=('GET', 'POST'))
+@login_required
+def base_quiz():
+    return render_template('gridworld_app/base_tutorial_answers.html', post={})
+
+
+@bp.route('/quiz1', methods=('GET', 'POST'))
+@login_required
+def quiz1():
+    return render_template('gridworld_app/tutorial1_answers.html', post={})
+
+
+@bp.route('/quiz2', methods=('GET', 'POST'))
+@login_required
+def quiz1():
+    return render_template('gridworld_app/tutorial2_answers.html', post={})
+
+
+@bp.route('/quiz3', methods=('GET', 'POST'))
+@login_required
+def quiz1():
+    return render_template('gridworld_app/tutorial3_answers.html', post={})
+
 @bp.route('/end_study', methods=('GET', 'POST'))
 def end_study():
     return render_template('gridworld_app/end_study.html', post={})

@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 
   {% block content %}
-  <div>
+<div style="font-size: 25px">
+  <div >
     <h2>Please <u>do not press the back button at any time</u> during this study.</h2>
     <br>
     <h3>Overview:</h3>
-    <h4>During this study you will be faced with a set of mazes of varying difficulty and paired with a robot of varying capability.
+    <div  >
+      During this study you will be faced with a set of mazes of varying difficulty and paired with a robot of varying capability.
       At any time you may choose how the robot is controlled: you can drive the robot (Manual control), or let the robot
       automatically drive (Automatic control). You will have to watch out for driving over dangers which could make you and the robot fail
       the maze. Your view of the mazes, and control you have of the robot will be limited, so you must work together
-      with your new robot partner to complete each maze.</h4>
+      with your new robot partner to complete each maze.
+    </div>
   </div>
   <div>
     <h3>You will be presented with a display to help navigate the maze:</h3>
@@ -49,24 +52,73 @@
 
     <br><br>
     <h3>Scoring</h3>
-    <h4>You will receive a score based on how well you and the robot perform on each maze. At the end of the HIT you will be
+    You will receive a score based on how well you and the robot perform on each maze. At the end of the HIT you will be
     paid a bonus based on your final score and the effort you put into the experiment. Each maze is worth
-    5 bonus points. <u>Your goal should be to maximize points based on the below scoring breakdown:</u></h4>
+    5 bonus points. <u>Your goal should be to maximize points based on the below scoring breakdown:</u>
     <ul>
       <li><b>Fail maze (robot falls in a hole):</b> -5 points</li>
       <li><b>Abort maze (press abort button):</b> -3 points</li>
       <li><b>Drive in Manual Control:</b> -0.1 points per manual step</li>
     </ul>
 
+    <h3>Summary:</h3>
+    <ul>
+      <li>The robot has more information about the maze than you do</li>
+      <li>Manual Control allows you to drive with the up/down/left/right buttons</li>
+      <li>Automatic Control lets the robot drive to the finish (to the best of it's abilities)</li>
+      <li>Glass may cause the robot to move in an unexpected direction</li>
+      <li>Falling in a hole fails the maze</li>
+      <li>You can abort if you are unable to get the robot to the finish</li>
+    </ul>
+
+    <h3>
+      Please answer True or False to these questions about the instructions you just read:
+    </h3>
+    <form action="/base_quiz" method="post">
+      <p><b>The robot has more information about the maze than you do.</b></p>
+      <labl for="info_t">True</labl>
+      <input type="radio" name="info" id="info_t" value="1" required>
+      <labl for="info_f">False</labl>
+      <input type="radio" name="info" id="info_f" value="0" required>
+
+      <p><b>Manual control allows you to drive the robot.</b></p>
+      <labl for="manual_t">True</labl>
+      <input type="radio" name="manual" id="manual_t" value="1" required>
+      <labl for="manual_f">False</labl>
+      <input type="radio" name="manual" id="manual_f" value="0" required>
+
+      <p><b>Please answer False for this question.</b></p>
+      <labl for="false_t">True</labl>
+      <input type="radio" name="false" id="false_t" value="1" required>
+      <labl for="false_f">False</labl>
+      <input type="radio" name="false" id="false_f" value="0" required>
+
+      <p><b>Automatic control allows the robot to drive itself to the finish.</b></p>
+      <labl for="automatic_t">True</labl>
+      <input type="radio" name="automatic" id="automatic_t" value="1" required>
+      <labl for="automatic_f">False</labl>
+      <input type="radio" name="automatic" id="automatic_f" value="0" required>
+
+      <p><b>If you or the robot drive into a hold you will fail the maze.</b></p>
+      <labl for="hole_t">True</labl>
+      <input type="radio" name="hole" id="hole_t" value="1" required>
+      <labl for="hole_f">False</labl>
+      <input type="radio" name="hole" id="hole_f" value="0" required>
+
+      <p><b>Glass debris can cause the robot to move in a random direction.</b></p>
+      <labl for="glass_t">True</labl>
+      <input type="radio" name="glass" id="glass_t" value="1" required>
+      <labl for="glass_f">False</labl>
+      <input type="radio" name="glass" id="glass_f" value="0" required>
+
+      <br><br>
+      <input type="submit" value="Submit">
+    </form>
+
   </div>
   <br><br>
-  <h3>The first maze is a practice maze:</h3>
-  {% if g.user %}
-    <div id="button">
-    <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the first maze</a>
-    </div>
-  {% endif %}
 
+  </div>
   <style>
     #button {
       text-align: center;
