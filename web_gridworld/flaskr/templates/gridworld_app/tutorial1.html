@@ -2,8 +2,8 @@
 
   {% block content %}
   <br><br>
-  <div style="font-size: 25px">
-    <h4>You have been paired with a new robot. In addition to Manual control, Automatic control, and Abort, it has the following capability:</h4>
+  <div style="font-size: 20px">
+    <h3>You have been paired with a new robot. In addition to Manual control, Automatic control, and Abort, it has the following capability:</h3>
 
     <h4><u>No additional capability.</u></h4>
 
@@ -12,37 +12,60 @@
       <img src="static/images/control_panel_1.png" alt="" />
     </div>
 
-    <h3>
-      Please answer True or False to these questions about the instructions you just read:
-    </h3>
-    <form action="/quiz1" method="post">
-      <p><b>The robot has more information about the maze than you do.</b></p>
-      <labl for="info_t">True</labl>
-      <input type="radio" name="info" id="info_t" value="1" required>
-      <labl for="info_f">False</labl>
-      <input type="radio" name="info" id="info_f" value="0" required>
-
-      <p><b>This robot is capable of Manual Control, Automatic Control, and Abort.</b></p>
-      <labl for="depth_t">True</labl>
-      <input type="radio" name="depth" id="depth_t" value="1" required>
-      <labl for="depth_f">False</labl>
-      <input type="radio" name="depth" id="depth_f" value="0" required>
-
-      <p><b>Choose false for this question.</b></p>
-      <labl for="false_t">True</labl>
-      <input type="radio" name="false" id="false_t" value="1" required>
-      <labl for="false_f">False</labl>
-      <input type="radio" name="false" id="false_f" value="0" required>
 
 
-      <br><br>
-      <input type="submit" value="Submit">
-    </form>
+      <form action="/quiz1" method="post" id="myform">
+        <h3>Please answer True or False to these questions about the instructions you just read:</h3>
+          The robot has more information about the maze than you do.
+          <div class="radioGroup">
+            <label for="info_t">True<br />
+              <input type="radio" name="info" id="info_t" value="1" required>
+            </label>
+            <label for="info_f">False<br />
+              <input type="radio" name="info" id="info_f" value="0" required>
+            </label>
+          </div>
+
+          This robot is capable of Manual Control, Automatic Control, and Abort.
+          <div class="radioGroup">
+            <label for="control_t">True<br />
+              <input type="radio" name="control" id="control_t" value="1" required>
+            </label>
+            <label for="control_f">False<br />
+              <input type="radio" name="control" id="control_f" value="0" required>
+            </label>
+          </div>
+
+          Choose false for this question.
+          <div class="radioGroup">
+            <label for="false_t">True<br />
+              <input type="radio" name="false" id="false_t" value="1" required>
+            </label>
+            <label for="false_f">False<br />
+              <input type="radio" name="false" id="false_f" value="0" required>
+            </label>
+          </div>
+
+          <br><br>
+          <input type="submit" value="Submit">
+      </form>
+
   </div>
+
+
+
   <style>
-    #button {
+    #myform {
+        text-align: left;
+        padding-top: 5%;
+        font-size: 20px;
+    }
+    .radioGroup label {
+      display: inline-block;
+      margin: 0 0.2em;
       text-align: center;
-      font-size: 50px;
+      padding-bottom: 2%;
+      font-size: 15px;
     }
   </style>
 {% endblock %}

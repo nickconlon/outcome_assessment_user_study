@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
   {% block content %}
-<div style="font-size: 25px">
+<div style="font-size: 20px">
   <div >
-    <h2>Please <u>do not press the back button at any time</u> during this study.</h2>
+    <h2>Please <u>do not press the back button or refresh the page at any time</u> during this study.</h2>
     <br>
     <h3>Overview:</h3>
-    <div  >
+    <div>
       During this study you will be faced with a set of mazes of varying difficulty and paired with a robot of varying capability.
       At any time you may choose how the robot is controlled: you can drive the robot (Manual control), or let the robot
       automatically drive (Automatic control). You will have to watch out for driving over dangers which could make you and the robot fail
@@ -61,6 +61,7 @@
       <li><b>Drive in Manual Control:</b> -0.1 points per manual step</li>
     </ul>
 
+    <br><br>
     <h3>Summary:</h3>
     <ul>
       <li>The robot has more information about the maze than you do</li>
@@ -70,59 +71,89 @@
       <li>Falling in a hole fails the maze</li>
       <li>You can abort if you are unable to get the robot to the finish</li>
     </ul>
+</div>
 
-    <h3>
-      Please answer True or False to these questions about the instructions you just read:
-    </h3>
-    <form action="/base_quiz" method="post">
-      <p><b>The robot has more information about the maze than you do.</b></p>
-      <labl for="info_t">True</labl>
-      <input type="radio" name="info" id="info_t" value="1" required>
-      <labl for="info_f">False</labl>
-      <input type="radio" name="info" id="info_f" value="0" required>
+    <form action="/base_quiz" method="post" id="myform">
+      <h3>Please answer True or False to these questions about the instructions you just read:</h3>
+      The robot has more information about the maze than you do.
+      <div class="radioGroup">
+        <label for="info_t">True<br />
+          <input type="radio" name="info" id="info_t" value="1" required>
+        </label>
+        <label for="info_f">False<br />
+          <input type="radio" name="info" id="info_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>Manual control allows you to drive the robot.</b></p>
-      <labl for="manual_t">True</labl>
-      <input type="radio" name="manual" id="manual_t" value="1" required>
-      <labl for="manual_f">False</labl>
-      <input type="radio" name="manual" id="manual_f" value="0" required>
+      Manual control allows you to drive the robot.
+      <div class="radioGroup">
+        <label for="manual_t">True<br />
+          <input type="radio" name="manual" id="manual_t" value="1" required>
+        </label>
+        <label for="manual_f">False<br />
+          <input type="radio" name="manual" id="manual_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>Please answer False for this question.</b></p>
-      <labl for="false_t">True</labl>
-      <input type="radio" name="false" id="false_t" value="1" required>
-      <labl for="false_f">False</labl>
-      <input type="radio" name="false" id="false_f" value="0" required>
 
-      <p><b>Automatic control allows the robot to drive itself to the finish.</b></p>
-      <labl for="automatic_t">True</labl>
-      <input type="radio" name="automatic" id="automatic_t" value="1" required>
-      <labl for="automatic_f">False</labl>
-      <input type="radio" name="automatic" id="automatic_f" value="0" required>
+      Please answer False for this question.
+      <div class="radioGroup">
+        <label for="false_t">True<br />
+          <input type="radio" name="false" id="false_t" value="1" required>
+        </label>
+        <label for="false_f">False<br />
+          <input type="radio" name="false" id="false_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>If you or the robot drive into a hold you will fail the maze.</b></p>
-      <labl for="hole_t">True</labl>
-      <input type="radio" name="hole" id="hole_t" value="1" required>
-      <labl for="hole_f">False</labl>
-      <input type="radio" name="hole" id="hole_f" value="0" required>
+      Automatic control allows the robot to drive itself to the finish.
+      <div class="radioGroup">
+        <label for="automatic_t">True<br />
+          <input type="radio" name="automatic" id="automatic_t" value="1" required>
+        </label>
+        <label for="automatic_f">False<br />
+          <input type="radio" name="automatic" id="automatic_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>Glass debris can cause the robot to move in a random direction.</b></p>
-      <labl for="glass_t">True</labl>
-      <input type="radio" name="glass" id="glass_t" value="1" required>
-      <labl for="glass_f">False</labl>
-      <input type="radio" name="glass" id="glass_f" value="0" required>
+      If you or the robot drive into a hold you will fail the maze.
+      <div class="radioGroup">
+        <label for="hole_t">True<br />
+          <input type="radio" name="hole" id="hole_t" value="1" required>
+        </label>
+        <label for="hole_f">False<br />
+          <input type="radio" name="hole" id="hole_f" value="0" required>
+        </label>
+      </div>
+
+      Glass debris can cause the robot to move in a random direction.
+      <div class="radioGroup">
+        <label for="glass_t">True<br />
+          <input type="radio" name="glass" id="glass_t" value="1" required>
+        </label>
+        <label for="glass_f">False<br />
+          <input type="radio" name="glass" id="glass_f" value="0" required>
+        </label>
+      </div>
 
       <br><br>
       <input type="submit" value="Submit">
     </form>
 
   </div>
-  <br><br>
 
-  </div>
   <style>
-    #button {
+    #myform {
+        text-align: left;
+        padding-top: 5%;
+        font-size: 20px;
+    }
+    .radioGroup label {
+      display: inline-block;
+      margin: 0 0.2em;
       text-align: center;
-      font-size: 50px;
+      padding-bottom: 2%;
+      font-size: 15px;
     }
   </style>
 {% endblock %}

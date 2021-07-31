@@ -1,31 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <form action="/prescreen" method="post">
-    <p><b>I am a native English speaker.</b></p>
-    <labl for="english_t">True</labl>
-    <input type="radio" name="english" id="english_t" value="1" required>
-    <labl for="english_f">False</labl>
-    <input type="radio" name="english" id="english_f" value="0" required>
+  <form action="/prescreen" method="post" id="myform">
+    I am a native English speaker.
+    <div class="radioGroup">
+      <label for="english_t">True<br />
+        <input type="radio" name="english" id="english_t" value="1" required>
+      </label>
+      <label for="english_f">False<br />
+        <input type="radio" name="english" id="english_f" value="0" required>
+      </label>
+    </div>
 
-    <p><b>I do not have vision problems that would prevent me from viewing and interacting with a game on a computer screen. </b></p>
-    <labl for="vision_t">True</labl>
-    <input type="radio" name="vision" id="vision_t" value="1" required>
-    <labl for="vision_f">False</labl>
-    <input type="radio" name="vision" id="vision_f" value="0" required>
+    I do not have vision problems that would prevent me from viewing and interacting with a game on a computer screen.
+    <div class="radioGroup">
+      <label for="vision_t">True<br />
+        <input type="radio" name="vision" id="vision_t" value="1" required>
+      </label>
+      <label for="vision_f">False<br />
+        <input type="radio" name="vision" id="vision_f" value="0" required>
+      </label>
+    </div>
 
-    <p><b>I do not have problems with depth perception.</b></p>
-    <labl for="depth_t">True</labl>
-    <input type="radio" name="depth" id="depth_t" value="1" required>
-    <labl for="depth_f">False</labl>
-    <input type="radio" name="depth" id="depth_f" value="0" required>
+    I am not colorblind.
+    <div class="radioGroup">
+      <label for="colorblind_t">True<br />
+        <input type="radio" name="colorblind" id="colorblind_t" value="1" required>
+      </label>
+      <label for="colorblind_f">False<br />
+        <input type="radio" name="colorblind" id="colorblind_f" value="0" required>
+      </label>
+    </div>
 
-    <p><b>I am not colorblind.</b></p>
-    <labl for="colorblind_t">True</labl>
-    <input type="radio" name="colorblind" id="colorblind_t" value="1" required>
-    <labl for="colorblind_f">False</labl>
-    <input type="radio" name="colorblind" id="colorblind_f" value="0" required>
-
+    <br><br>
     <input type="submit" value="Submit">
   </form>
+
+<style>
+    #myform {
+        text-align: left;
+        padding-top: 5%;
+        font-size: 20px;
+    }
+    .radioGroup label {
+      display: inline-block;
+      margin: 0 0.2em;
+      text-align: center;
+      padding-bottom: 2%;
+      font-size: 15px;
+    }
+</style>
 {% endblock %}

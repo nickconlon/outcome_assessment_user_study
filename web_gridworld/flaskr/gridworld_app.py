@@ -16,7 +16,7 @@ NUM_LEVELS = 3
 
 COLORS = ['red', 'green', 'blue', 'black']
 CONFIDENCES = ["very bad", "bad", "fair", "good", "very good"]
-APP_PATH = "/var/www/html/web_gridworld/web_gridworld"
+APP_PATH = "."#"/var/www/html/web_gridworld/web_gridworld"
 
 @bp.route('/')
 def index():
@@ -28,18 +28,18 @@ def index():
 
 @bp.route('/prescreen', methods=('POST',))
 def prescreen():
-    english = request.form['english']
-    vision = request.form['vision']
-    depth = request.form['depth']
-    colorblind = request.form['colorblind']
+    elements = ['english', 'vision', 'colorblind']
+    response = ""
+    total = 0
+    for e in elements:
+        response += request.form[e]
+        total += int(request.form[e])
 
-    db_entry = english + vision + depth + colorblind
     db = get_db()
-    db.execute('UPDATE user SET prescreen=? WHERE id = ?', (db_entry, g.user['id'],))
+    db.execute('UPDATE user SET prescreen=? WHERE id = ?', (response, g.user['id'],))
     db.commit()
 
-    total = int(english) + int(vision) + int(depth) + int(colorblind)
-    if total != 4:
+    if total != len(elements):
         return render_template('gridworld_app/end_study.html')
     return base_tutorial()
 
@@ -308,25 +308,58 @@ def base_tutorial():
 @bp.route('/base_quiz', methods=('GET', 'POST'))
 @login_required
 def base_quiz():
+    elements = ['info', 'manual', 'false', 'automatic', 'hole', 'glass']
+    response = ""
+    for e in elements:
+        response += request.form[e]
+    print(response)
+    db = get_db()
+    db.execute('UPDATE user SET base_quiz = ? WHERE id = ?', (response, g.user['id'],))
+    db.commit()
     return render_template('gridworld_app/base_tutorial_answers.html', post={})
 
 
 @bp.route('/quiz1', methods=('GET', 'POST'))
 @login_required
 def quiz1():
+    elements = ['info', 'control', 'false']
+    response = ""
+    for e in elements:
+        response += request.form[e]
+    print(response)
+    db = get_db()
+    db.execute('UPDATE user SET quiz1 = ? WHERE id = ?', (response, g.user['id'],))
+    db.commit()
     return render_template('gridworld_app/tutorial1_answers.html', post={})
 
 
 @bp.route('/quiz2', methods=('GET', 'POST'))
 @login_required
-def quiz1():
+def quiz2():
+    elements = ['info', 'conf', 'badConf', 'false', 'goodConf', 'fairConf']
+    response = ""
+    for e in elements:
+        response += request.form[e]
+    print(response)
+    db = get_db()
+    db.execute('UPDATE user SET quiz2 = ? WHERE id = ?', (response, g.user['id'],))
+    db.commit()
     return render_template('gridworld_app/tutorial2_answers.html', post={})
 
 
 @bp.route('/quiz3', methods=('GET', 'POST'))
 @login_required
-def quiz1():
+def quiz3():
+    elements = ['info', 'false', 'manual', 'badConf', 'goodConf', 'fairConf']
+    response = ""
+    for e in elements:
+        response += request.form[e]
+    print(response)
+    db = get_db()
+    db.execute('UPDATE user SET quiz3 = ? WHERE id = ?', (response, g.user['id'],))
+    db.commit()
     return render_template('gridworld_app/tutorial3_answers.html', post={})
+
 
 @bp.route('/end_study', methods=('GET', 'POST'))
 def end_study():
