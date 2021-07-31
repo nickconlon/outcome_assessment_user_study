@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+  <br><br>
+  <div style="font-size: 25px">
+      <p><b>The robot has more information about the maze than you do.</b></p>
+      True
+
+      <p><b>This robot is capable of Manual Control, Automatic Control, and Abort.</b></p>
+      True
+
+      <p><b>Choose false for this question.</b></p>
+      False
+
+
+      <br><br>
+
+      {% if g.user %}
+      <div id="button">
+        <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the next round</a>
+      </div>
+      {% endif %}
+  </div>
+
+  <style>
+    #button {
+      text-align: center;
+      font-size: 50px;
+    }
+  </style>
+{% endblock %}
