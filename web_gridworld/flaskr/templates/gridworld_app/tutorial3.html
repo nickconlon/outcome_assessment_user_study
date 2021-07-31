@@ -2,8 +2,8 @@
 
   {% block content %}
   <br><br>
-  <div style="font-size: 25px">
-      <h4>You have been paired with a new robot. In addition to Manual control, Automatic control, and Abort, it has the following capability:</h4>
+  <div style="font-size: 20px">
+    <h3>You have been paired with a new robot. In addition to Manual control, Automatic control, and Abort, it has the following capability:</h3>
 
     <b>Self-Confidence Report:</b> This statement is what the robot thinks its outcome will be if it drives in Automatic Mode to
        an intermediate location denoted by the blue square, and it's outcome if it drives in Automatic Mode from that blue square to
@@ -19,60 +19,91 @@
 
     Remember, <b>this is the robot's estimate of how it thinks it will perform in the maze in Automatic Mode</b>, not how it thinks you will
     perform in Manual Mode. The report will be displayed just above the maze:
-
+    <br><br>
     <div style="text-align:center; border:5px solid #555">
       <img src="static/images/control_panel_3.png" alt="" />
     </div>
 
-    <h3>
-      Please answer True or False to these questions about the instructions you just read:
-    </h3>
-    <form action="/quiz3" method="post">
-      <p><b>The robot has more information about the maze than you do.</b></p>
-      <labl for="info_t">True</labl>
-      <input type="radio" name="info" id="info_t" value="1" required>
-      <labl for="info_f">False</labl>
-      <input type="radio" name="info" id="info_f" value="0" required>
+    <form action="/quiz2" method="post" id="myform">
+      <h3>Please answer True or False to these questions about the instructions you just read:</h3>
+      The robot has more information about the maze than you do.
+      <div class="radioGroup">
+        <label for="info_t">True<br />
+          <input type="radio" name="info" id="info_t" value="1" required>
+        </label>
+        <label for="info_f">False<br />
+          <input type="radio" name="info" id="info_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>We request that you choose false for this question.</b></p>
-      <labl for="false_t">True</labl>
-      <input type="radio" name="false" id="false_t" value="1" required>
-      <labl for="false_f">False</labl>
-      <input type="radio" name="false" id="false_f" value="0" required>
+      We request that you choose false for this question.
+      <div class="radioGroup">
+        <label for="false_t">True<br />
+          <input type="radio" name="false" id="false_t" value="1" required>
+        </label>
+        <label for="false_f">False<br />
+          <input type="radio" name="false" id="false_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>This robot will report its self-confidence to you.</b></p>
-      <labl for="manual_t">True</labl>
-      <input type="radio" name="manual" id="manual_t" value="1" required>
-      <labl for="manual_f">False</labl>
-      <input type="radio" name="manual" id="manual_f" value="0" required>
+      This robot will report its self-confidence to you.
+      <div class="radioGroup">
+        <label for="conf_t">True<br />
+          <input type="radio" name="conf" id="conf_t" value="1" required>
+        </label>
+        <label for="conf_f">False<br />
+          <input type="radio" name="conf" id="conf_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>very bad self-confidence means the robot is quite sure it will fail driving to the location.</b></p>
-      <labl for="badConf_t">True</labl>
-      <input type="radio" name="badConf" id="badConf_t" value="1" required>
-      <labl for="badConf_f">False</labl>
-      <input type="radio" name="badConf" id="badConf_f" value="0" required>
+      Very bad self-confidence means the robot is quite sure it will fail driving to the finish.
+      <div class="radioGroup">
+        <label for="badConf_t">True<br />
+          <input type="radio" name="badConf" id="badConf_t" value="1" required>
+        </label>
+        <label for="badConf_f">False<br />
+          <input type="radio" name="badConf" id="badConf_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>very good self-confidence means the robot is quite sure it will succeed driving to the location.</b></p>
-      <labl for="goodConf_t">True</labl>
-      <input type="radio" name="goodConf" id="goodConf_t" value="1" required>
-      <labl for="goodConf_f">False</labl>
-      <input type="radio" name="goodConf" id="goodConf_f" value="0" required>
+      Very good self-confidence means the robot is quite sure it will succeed driving to the finish.
+      <div class="radioGroup">
+        <label for="goodConf_t">True<br />
+          <input type="radio" name="goodConf" id="goodConf_t" value="1" required>
+        </label>
+        <label for="goodConf_f">False<br />
+          <input type="radio" name="goodConf" id="goodConf_f" value="0" required>
+        </label>
+      </div>
 
-      <p><b>fair self-confidence means the robot thinks there is an equal chance for failure or success.</b></p>
-      <labl for="fairConf_t">True</labl>
-      <input type="radio" name="fairConf" id="fairConf_t" value="1" required>
-      <labl for="fairConf_f">False</labl>
-      <input type="radio" name="fairConf" id="fairConf_f" value="0" required>
+      Fair self-confidence means the robot thinks there is an equal chance for failure or success.
+      <div class="radioGroup">
+        <label for="fairConf_t">True<br />
+          <input type="radio" name="fairConf" id="fairConf_t" value="1" required>
+        </label>
+        <label for="fairConf_f">False<br />
+          <input type="radio" name="fairConf" id="fairConf_f" value="0" required>
+        </label>
+      </div>
 
       <br><br>
       <input type="submit" value="Submit">
+
     </form>
   </div>
 
   <style>
-    #button {
+    #myform {
+        text-align: left;
+        padding-top: 5%;
+        font-size: 20px;
+    }
+    .radioGroup label {
+      display: inline-block;
+      margin: 0 0.2em;
       text-align: center;
-      font-size: 50px;
+      padding-bottom: 2%;
+      font-size: 15px;
     }
   </style>
 {% endblock %}

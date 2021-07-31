@@ -5,46 +5,73 @@
 {% block content %}
   {% if g.user %}
    <form action="/open_question" method="POST" id="myform">
-    <p><b>What age are you?</b></p>
-    <input type="text" name="age" id="age" size="10" required>
+    <b>What age are you?</b>
+    <div class="radioGroup">
+      <input type="text" name="age" id="age" size="10" required>
+    </div>
+    
+    <b>What gender are you?</b>
+    <div class="radioGroup">
+     <label for="g1">Female<br />
+      <input type="radio" name="gender" id="g1" value="female" required>
+     </label>
+     <label for="g2">Male<br />
+      <input type="radio" name="gender" id="g2" value="male" required>
+     </label>
+     <label for="g3">Other<br />
+      <input type="radio" name="gender" id="g3" value="other" required>
+     </label>
+     <label for="g4">Prefer not to answer<br />
+      <input type="radio" name="gender" id="g4" value="no answer" required>
+     </label>
+    </div>
 
-    <p><b>What gender are you?</b></p>
-    <labl for="g1">Female</labl>
-    <input type="radio" name="gender" id="g1" value="female" required>
-    <labl for="g2">Male</labl>
-    <input type="radio" name="gender" id="g2" value="male" required>
-    <labl for="g3">Other</labl>
-    <input type="radio" name="gender" id="g3" value="other" required>
-    <labl for="g4">Prefer not to answer</labl>
-    <input type="radio" name="gender" id="g4" value="no answer" required>
-
-    <p><b>What is your highest education level?</b></p>
-    <labl for="e1">Did Not Finish High School</labl>
-    <input type="radio" name="education" id="e1" value="some hs" required>
-    <labl for="e2">High School Diploma</labl>
-    <input type="radio" name="education" id="e2" value="hs diploma" required>
-    <labl for="e3">Some College</labl>
-    <input type="radio" name="education" id="e3" value="some college" required>
-    <labl for="e4">Associates</labl>
-    <input type="radio" name="education" id="e4" value="associates" required>
-    <labl for="e5">Bachelors</labl>
-    <input type="radio" name="education" id="e5" value="bachelors" required>
-    <labl for="e6">Graduate Degree (Masters, Phd, MD, etc.)</labl>
-    <input type="radio" name="education" id="e6" value="graduate" required>
-
-     <p><b>Use this area to let us know your (optional) thoughts on the study</b></p>
-     <label for="open"></label>
-       <textarea id="open" name="open_text" rows="5" cols="50"> </textarea>
-
-     <br><br>
-     <input type="submit" value="Submit">
+    <b>What is your highest education level?</b>
+    <div class="radioGroup">
+     <label for="e1">Did Not Finish High School<br />
+      <input type="radio" name="education" id="e1" value="some hs" required>
+     </label>
+     <label for="e2">High School Diploma<br />
+      <input type="radio" name="education" id="e2" value="hs diploma" required>
+     </label>
+     <label for="e3">Some College<br />
+      <input type="radio" name="education" id="e3" value="some college" required>
+     </label>
+     <label for="e4">Associates<br />
+      <input type="radio" name="education" id="e4" value="associates" required>
+     </label>
+     <label for="e5">Bachelors<br />
+      <input type="radio" name="education" id="e5" value="bachelors" required>
+     </label>
+     <label for="e6">Graduate Degree (Masters, Phd, MD, etc.)<br />
+      <input type="radio" name="education" id="e6" value="graduate" required>
+     </label>
+    </div>
+     
+    <b>Use this area to let us know your (optional) thoughts on the study</b>
+    <div class="radioGroup">
+      <label for="open">
+        <textarea id="open" name="open_text" rows="5" cols="50"> </textarea>
+      </label>
+    </div>
+    
+      <br><br>
+      <input type="submit" value="Submit">
    </form>
 
 <style>
-#myform {
+   .radioGroup label {
+      display: inline-block;
+      margin: 0 0.2em;
+      text-align: center;
+      padding-bottom: 2%;
+      font-size: 15px;
+}
 
+#myform {
+        text-align: left;
         padding-top: 5%;
-        font-size: 20;
+        font-size: 20px;
 }
 </style>
   {% endif %}
