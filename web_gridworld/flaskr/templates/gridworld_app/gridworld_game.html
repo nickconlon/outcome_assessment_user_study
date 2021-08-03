@@ -2,7 +2,7 @@
 
 {% block content %}
     <div id="title" style="text-align:center">
-          <div><b>Work with the robot and navigate to the green square. Ready, go!</b></div>
+          <div><b>Please work with the robot to navigate to the green square.</b></div>
     </div>
     <div style="font-size: 24px" id="dialog"></div>
 
@@ -43,7 +43,7 @@
         text-align: center;
         padding-top: 10%;
         text-align: left;
-        font-size: 40px;
+        font-size: 25px;
         padding-left: 80px;
       }
 
@@ -171,7 +171,10 @@
     const grid_board_ctx = grid_board.getContext("2d");
 
     if(report_level === '0') {
-        document.getElementById('title').innerHTML = "<div><b>Practice: Work with the robot and navigate to the green square. Ready, go!</b></div>"
+        document.getElementById('title').innerHTML = "<div><b>Practice: Please work with the "+robot_color+ " robot to navigate to the green square.</b></div>"
+    }
+    else{
+        document.getElementById('title').innerHTML = "<div><b>Please work with the " + robot_color + " robot to navigate to the green square.</b></div>"
     }
     // Start the game
     main();

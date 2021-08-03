@@ -2,24 +2,33 @@
 
   {% block content %}
   <br><br>
-    <div style="font-size: 20px">
-    <h3>You have been paired with a new robot. In addition to Manual control, Automatic control, and Abort, it has the following capability:</h3>
-
-     <b>Self-Confidence Report:</b> This statement is what the robot thinks its outcome will be if it drives in Automatic Mode to
-       the green square. It can be: 'very bad', 'bad', 'fair', 'good', or 'very good'. For example:
-
+  <div style="font-size: 20px">
+    <h3>Summary:</h3>
     <ul>
-      <li><b>very bad</b> means the robot is <u>quite certain it will fail</u> while driving to the finish.</li>
-      <li><b>bad</b> means the robot thinks there is a <u>high (but not certain) chance it will fail</u> while driving to the finish.</li>
-      <li><b>fair</b> means the robot thinks there is an <u>equal chance for failure or success</u> while driving to the finish.</li>
-      <li><b>good</b> means the robot thinks there is a <u>high (but not certain) chance it will succeed</u> in driving to the finish.</li>
-      <li><b>very good</b> means the robot is <u>quite certain it will succeed</u> in driving to the finish.</li>
+      <li>You have been paired with a <u>new robot</u></li>
+      <li>The robot's <u>color is {{ post.color }}</u></li>
+      <li>You will work with this robot for the next <u>4 mazes</u></li>
+      <li>In addition to Manual control, Automatic control, and Abort, it has the following capability:</li>
+      <ul>
+        <li><b>Self-Confidence Report:</b> What the robot thinks the outcome will be if it drives in Automatic Mode to
+          some location</li>
+        <li>The robot will provide self-confidence report for one location: green square</li>
+        <li>Self-Confidence statements can be: <u>very bad</u>, <u>bad</u>, <u>fair</u>, <u>good</u>, or <u>very good</u>:</li>
+        <ul>
+          <li><b>very bad</b>: The robot is <u>quite certain it will fail</u> while driving to the green square.</li>
+          <li><b>bad</b>: The robot thinks there is a <u>high (but not certain) chance it will fail</u> while driving to the green square</li>
+          <li><b>fair</b>: The robot thinks there is an <u>equal chance for failure or success</u> while driving to the green square</li>
+          <li><b>good</b>: The robot thinks there is a <u>high (but not certain) chance it will succeed</u> in driving to the green square</li>
+          <li><b>very good</b>: The robot is <u>quite certain it will succeed</u> while driving to the green square</li>
+        </ul>
+        <li>Remember, <b>this is the robot's estimate of how it thinks it will perform in the maze in Automatic Mode</b>, not how it thinks you will
+    perform in Manual Mode</li>
+      </ul>
     </ul>
 
-    Remember, <b>this is the robot's estimate of how it thinks it will perform in the maze in Automatic Mode</b>, not how it thinks you will
-    perform in Manual Mode. The report will be displayed just above the maze:
-
+    The report will be displayed just above the maze:
     <br><br>
+
     <div style="text-align:center; border:5px solid #555">
       <img src="static/images/control_panel_2.png" alt="" />
     </div>
@@ -27,7 +36,7 @@
 
     <form action="/quiz2" method="post" id="myform">
       <h3>Please answer True or False to these questions about the instructions you just read:</h3>
-      The robot has more information about the maze than you do.
+      The robot can see the explored and unexplored parts of the maze.
       <div class="radioGroup">
         <label for="info_t">True<br />
           <input type="radio" name="info" id="info_t" value="1" required>

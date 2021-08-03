@@ -3,32 +3,32 @@
   {% block content %}
   <br><br>
   <div style="font-size: 20px">
-    <h3>The robot has more information about the maze than you do.</h3>
+    <h3>The robot can see both explored and unexplored areas.</h3>
     <u>True</u>
 
-      <h3>Manual control allows you to drive the robot.</h3>
-      <u>True</u>
+    <h3>Manual control allows you to drive the robot.</h3>
+    <u>True</u>
 
-      <h3>Please answer False for this question.</h3>
-      <u>False</u>
+    <h3>Please answer False for this question.</h3>
+    <u>False</u>
 
-      <h3>Automatic control allows the robot to drive itself to the finish.</h3>
-      <u>True</u>
+    <h3>Automatic control allows the robot to drive itself to the finish.</h3>
+    <u>True</u>
 
-      <h3>If you or the robot drive into a hold you will fail the maze.</h3>
-      <u>True</u>
+    <h3>If you or the robot drive into a hole you will fail the maze.</h3>
+    <u>True</u>
 
-      <h3>Glass debris can cause the robot to move in a random direction.</h3>
-      <u>True</u>
+    <h3>Glass debris can cause the robot to move in a random direction.</h3>
+    <u>True</u>
 
-      <br><br>
+    <br><br>
 
-      <h3>The first maze is a practice maze:</h3>
-      {% if g.user %}
-        <div id="button">
-        <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the first maze</a>
-        </div>
-      {% endif %}
+    <h2>You will now try a single practice maze with a <u>{{ post.color }} robot</u>:</h2>
+    {% if g.user %}
+      <div id="button">
+        <a class="action" href="{{ url_for('gridworld_app.playgame') }}" >Start the practice maze</a>
+      </div>
+    {% endif %}
   </div>
 
   <style>

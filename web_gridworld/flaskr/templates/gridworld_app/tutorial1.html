@@ -3,9 +3,16 @@
   {% block content %}
   <br><br>
   <div style="font-size: 20px">
-    <h3>You have been paired with a new robot. In addition to Manual control, Automatic control, and Abort, it has the following capability:</h3>
-
-    <h4><u>No additional capability.</u></h4>
+    <h3>Summary:</h3>
+    <ul>
+      <li>You have been paired with a <u>new robot</u></li>
+      <li>The robot's <u>color is {{ post.color }}</u></li>
+      <li>You will work with this robot for the next <u>4 mazes</u></li>
+      <li>In addition to Manual control, Automatic control, and Abort, it has the following capability:</li>
+      <ul>
+        <li>No additional capability</li>
+      </ul>
+    </ul>
 
     <br><br>
     <div style="text-align:center; border:5px solid #555">

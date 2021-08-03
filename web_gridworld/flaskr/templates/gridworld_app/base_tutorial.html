@@ -12,11 +12,15 @@
       controlled: you can drive the robot (Manual Control), or let the robot automatically drive to the finish
       (Automatic Control).
 
-      <br><br>The robot can see the entire maze (including obstacles and holes) but has difficulty seeing broken glass
+      <br><br>The robot can see the entire maze (both explored and unexplored areas) but has difficulty seeing broken glass
       which can confuse its sensors and may cause it to move in a random direction. You are only able to see the small
       portion of the maze explored during your interaction with the robot (including nearby obstacles, holes, and glass).
       Driving over or falling into a hole will cause you and the robot fail the maze, so you will have to work together
       to make it to the finish.
+
+      <br><br>You will interact with 4 different robots during this study, each a different color and each with different capabilities. With each robot you
+      will complete 1-3 mazes. At the end of the 1-3 mazes you will be asked a series of questions about the robot you just worked with.
+
     </div>
   </div>
   <div>
@@ -70,18 +74,19 @@
     <br><br>
     <h3>Summary:</h3>
     <ul>
-      <li>The robot has more information about the maze than you do</li>
+      <li>The robot can see both explored and unexplored areas</li>
       <li>Manual Control allows you to drive with the up/down/left/right buttons</li>
-      <li>Automatic Control lets the robot drive to the finish (to the best of it's abilities)</li>
+      <li>Automatic Control lets the robot drive to the finish (to the best of its abilities)</li>
       <li>Glass may cause the robot to move in an unexpected direction</li>
       <li>Falling in a hole fails the maze</li>
       <li>You can abort if you are unable to get the robot to the finish</li>
+      <li>You will be paired with different robots (each a different color) throughout this study</li>
     </ul>
 </div>
 
     <form action="/base_quiz" method="post" id="myform">
       <h3>Please answer True or False to these questions about the instructions you just read:</h3>
-      The robot has more information about the maze than you do.
+      The robot can see both explored and unexplored areas.
       <div class="radioGroup">
         <label for="info_t">True<br />
           <input type="radio" name="info" id="info_t" value="1" required>
@@ -122,7 +127,7 @@
         </label>
       </div>
 
-      If you or the robot drive into a hold you will fail the maze.
+      If you or the robot drive into a hole you will fail the maze.
       <div class="radioGroup">
         <label for="hole_t">True<br />
           <input type="radio" name="hole" id="hole_t" value="1" required>
