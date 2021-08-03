@@ -28,7 +28,7 @@ def index():
 
 @bp.route('/prescreen', methods=('POST',))
 def prescreen():
-    elements = ['english', 'vision', 'colorblind']
+    elements = ['english', 'vision', 'colorblind', 'age']
     response = ""
     total = 0
     for e in elements:
@@ -217,20 +217,26 @@ def trust_question():
     print(js)
     tutorial = session['l_order'][int(session['level'])]
     if session['level'] == '1':
+        color = int(session['c_order'][int(session['c_ctr'])])
+        color = COLORS[color]
         db = get_db()
         db.execute('UPDATE user SET practice_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={})
+        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={"color": color})
     elif session['level'] == '2':
+        color = int(session['c_order'][int(session['c_ctr'])])
+        color = COLORS[color]
         db = get_db()
         db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={})
+        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={"color": color})
     elif session['level'] == '3':
+        color = int(session['c_order'][int(session['c_ctr'])])
+        color = COLORS[color]
         db = get_db()
         db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (js, g.user['id'],))
         db.commit()
-        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={})
+        return render_template('gridworld_app/tutorial'+tutorial+'.html', post={"color": color})
     elif session['level'] == '4':
         db = get_db()
         db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (js, g.user['id'],))
@@ -313,10 +319,12 @@ def base_quiz():
     for e in elements:
         response += request.form[e]
     print(response)
+    color = int(session['c_order'][int(session['c_ctr'])])
+    color = COLORS[color]
     db = get_db()
     db.execute('UPDATE user SET base_quiz = ? WHERE id = ?', (response, g.user['id'],))
     db.commit()
-    return render_template('gridworld_app/base_tutorial_answers.html', post={})
+    return render_template('gridworld_app/base_tutorial_answers.html', post={"color": color})
 
 
 @bp.route('/quiz1', methods=('GET', 'POST'))
@@ -363,4 +371,6 @@ def quiz3():
 
 @bp.route('/end_study', methods=('GET', 'POST'))
 def end_study():
-    return render_template('gridworld_app/end_study.html', post={})
+    session.clear()
+    return redirect(url_for('end_study'))
+    #return render_template('gridworld_app/end_study.html', post={})
