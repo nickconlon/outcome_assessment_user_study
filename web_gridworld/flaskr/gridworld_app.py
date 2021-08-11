@@ -16,7 +16,7 @@ NUM_LEVELS = 3
 
 COLORS = ['red', 'green', 'blue', 'black']
 CONFIDENCES = ["very bad", "bad", "fair", "good", "very good"]
-APP_PATH = "/var/www/html/web_gridworld/web_gridworld"
+APP_PATH = "."#"/var/www/html/web_gridworld/web_gridworld"
 
 @bp.route('/')
 def index():
@@ -65,8 +65,13 @@ def playgame():
         map_path = os.path.join(APP_PATH,"flaskr/maps/level_" + report_level + "/map" + map_number)
 
         if int(report_level) == 2:
-            if accuracy_level == 0:
-                with open(map_path + "_confidence.txt") as file:
+            if accuracy_level == 0:  # accurate confidence statements
+
+                conf_path = "_confidence.txt"
+                if competency_level == 1:
+                    conf_path = "_confidence1.txt"
+
+                with open(map_path + conf_path) as file:
                     for line in file.readlines():
                         confidence = line.strip()
                         break
@@ -76,9 +81,14 @@ def playgame():
                 confidence = "<b>Report:</b> The robot has <b>" + rand_conf \
                              + " confidence</b> in navigating to the green square."
         elif int(report_level) == 3:
-            if accuracy_level == 0:
 
-                with open(map_path + "_confidence.txt") as file:
+            if accuracy_level == 0:  # accurate confidence statements
+
+                conf_path = "_confidence.txt"
+                if competency_level == 1:
+                    conf_path = "_confidence1.txt"
+
+                with open(map_path + conf_path) as file:
                     for line in file.readlines():
                         confidence = line.strip()
                         break
