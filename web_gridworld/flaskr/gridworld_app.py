@@ -16,7 +16,7 @@ NUM_LEVELS = 3
 
 COLORS = ['red', 'green', 'blue', 'black']
 CONFIDENCES = ["very bad", "bad", "fair", "good", "very good"]
-APP_PATH = "."#"/var/www/html/web_gridworld/web_gridworld"
+APP_PATH = "/var/www/html/web_gridworld/web_gridworld"
 
 @bp.route('/')
 def index():
