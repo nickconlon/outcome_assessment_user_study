@@ -200,56 +200,52 @@ def outcome():
     if session['ctr'] == '0':
         color = int(session['c_order'][int(session['c_ctr'])])
         color = COLORS[color]
-        level = int(session['l_order'][int(session['level'])-1]) >= 2
+        level = 4 if int(session['l_order'][int(session['level'])-1]) >= 1 else 1
         print("color "+session['c_order'])
         print(int(session['l_order'][int(session['level'])-1]))
         print("order "+session['l_order'])
         print("level  "+session['level'])
         session['c_ctr'] = str(int(session['c_ctr'])+1)
         post = {"color": color, "level": int(level)}
-        return render_template('gridworld_app/trust.html', post=post)
+        return render_template('gridworld_app/mdmt.html', post=post)
     return playgame()
 
 
 @bp.route('/trust_question', methods=('POST',))
 @login_required
 def trust_question():
-    dm_ability = request.form['decision_making_ability']
-    dm_process = request.form['decision_making_process']
-    plan = request.form['robots_plan']
-    navigation = request.form['robots_navigate']
-    functioning = request.form['functioning']
-    performance = request.form['performance']
-    confidence = '-'
-    if 'confidence' in request.form:
-        confidence = request.form['confidence']
-    js = dm_ability+dm_process+plan+navigation+functioning+performance+confidence
-    print(js)
+    elements = ['reliable', 'capable', 'predictable',
+                'skilled', 'someone_you_can_count_on',
+                'competent', 'consistent', 'meticulous']
+    response = ""
+    for e in elements:
+        response += request.form[e]
+
     tutorial = session['l_order'][int(session['level'])]
     if session['level'] == '1':
         color = int(session['c_order'][int(session['c_ctr'])])
         color = COLORS[color]
         db = get_db()
-        db.execute('UPDATE user SET practice_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.execute('UPDATE user SET practice_trust = ? WHERE id = ?', (response, g.user['id'],))
         db.commit()
         return render_template('gridworld_app/tutorial'+tutorial+'.html', post={"color": color})
     elif session['level'] == '2':
         color = int(session['c_order'][int(session['c_ctr'])])
         color = COLORS[color]
         db = get_db()
-        db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.execute('UPDATE user SET first_trust = ? WHERE id = ?', (response, g.user['id'],))
         db.commit()
         return render_template('gridworld_app/tutorial'+tutorial+'.html', post={"color": color})
     elif session['level'] == '3':
         color = int(session['c_order'][int(session['c_ctr'])])
         color = COLORS[color]
         db = get_db()
-        db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.execute('UPDATE user SET second_trust = ? WHERE id = ?', (response, g.user['id'],))
         db.commit()
         return render_template('gridworld_app/tutorial'+tutorial+'.html', post={"color": color})
     elif session['level'] == '4':
         db = get_db()
-        db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (js, g.user['id'],))
+        db.execute('UPDATE user SET third_trust = ? WHERE id = ?', (response, g.user['id'],))
         db.commit()
         return render_template('gridworld_app/open_question.html', post={})
 

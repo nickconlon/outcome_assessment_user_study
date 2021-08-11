@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="text-align:center; border:5px solid #555">
+      <img src="../../static/images/robot_{{ post.color }}.png" alt="" />
+    </div>
+    <div id="myform">
+        <b>During the last {{ post.level }} maze(s) you were paired with the {{ post.color }} robot. </b><br />
+        <b>Please rate the {{ post.color }} robot using the scale from 0 (Not at all) to 7 (Very).
+            If a particular item does not seem to fit the robot in the situation, please select the option that says "Does Not Fit".</b>
+    </div>
+  <form action="/trust_question" method="POST" id="myform">
+      Reliable
+    <div class="radioGroup">
+        <label for="q1_0">Not <br>at all <br>1<br />
+            <input type="radio" name="reliable" id="q1_0" value="0" required/>
+        </label>
+        <label for="q1_1">2<br />
+            <input type="radio" name="reliable" id="q1_1" value="1" />
+        </label>
+        <label for="q1_2">3<br />
+            <input type="radio" name="reliable" id="q1_2" value="2" />
+        </label>
+        <label for="q1_3">4<br />
+            <input type="radio" name="reliable" id="q1_3" value="3" />
+        </label>
+        <label for="q1_4">5<br />
+            <input type="radio" name="reliable" id="q1_4" value="4" />
+        </label>
+        <label for="q1_5">5<br />
+            <input type="radio" name="reliable" id="q1_5" value="4" />
+        </label>
+        <label for="q1_6">6<br />
+            <input type="radio" name="reliable" id="q1_6" value="5" />
+        </label>
+        <label for="q1_7">Very <br> 7<br />
+            <input type="radio" name="reliable" id="q1_7" value="6" />
+        </label>
+        <label for="q1_8">Does Not<br> Fit<br />
+            <input type="radio" name="reliable" id="q1_8" value="7" />
+        </label>
+
+    </div>
+
+    Capable
+    <div class="radioGroup">
+        <label for="q2_0">Not <br>at all <br>1<br />
+            <input type="radio" name="capable" id="q2_0" value="0" required/>
+        </label>
+        <label for="q2_1">2<br />
+            <input type="radio" name="capable" id="q2_1" value="1" />
+        </label>
+        <label for="q2_2">3<br />
+            <input type="radio" name="capable" id="q2_2" value="2" />
+        </label>
+        <label for="q2_3">4<br />
+            <input type="radio" name="capable" id="q2_3" value="3" />
+        </label>
+        <label for="q2_4">5<br />
+            <input type="radio" name="capable" id="q2_4" value="4" />
+        </label>
+        <label for="q2_6">6<br />
+            <input type="radio" name="capable" id="q2_6" value="5" />
+        </label>
+        <label for="q2_7">Very <br> 7<br />
+            <input type="radio" name="capable" id="q2_7" value="6" />
+        </label>
+        <label for="q2_8">Does Not<br> Fit<br />
+            <input type="radio" name="capable" id="q2_8" value="7" />
+        </label>
+    </div>
+
+      Predictable
+    <div class="radioGroup">
+        <label for="q3_0">Not <br>at all <br>1<br />
+            <input type="radio" name="predictable" id="q3_0" value="0" required/>
+        </label>
+        <label for="q3_1">2<br />
+            <input type="radio" name="predictable" id="q3_1" value="1" />
+        </label>
+        <label for="q3_2">3<br />
+            <input type="radio" name="predictable" id="q3_2" value="2" />
+        </label>
+        <label for="q3_3">4<br />
+            <input type="radio" name="predictable" id="q3_3" value="3" />
+        </label>
+        <label for="q3_4">5<br />
+            <input type="radio" name="predictable" id="q3_4" value="4" />
+        </label>
+        <label for="q3_6">6<br />
+            <input type="radio" name="predictable" id="q3_6" value="5" />
+        </label>
+        <label for="q3_7">Very <br> 7<br />
+            <input type="radio" name="predictable" id="q3_7" value="6" />
+        </label>
+        <label for="q3_8">Does Not<br> Fit<br />
+            <input type="radio" name="predictable" id="q3_8" value="7" />
+        </label>
+    </div>
+
+    Skilled
+    <div class="radioGroup">
+        <label for="q4_0">Not <br>at all <br>1<br />
+            <input type="radio" name="skilled" id="q4_0" value="0" required/>
+        </label>
+        <label for="q4_1">2<br />
+            <input type="radio" name="skilled" id="q4_1" value="1" />
+        </label>
+        <label for="q4_2">3<br />
+            <input type="radio" name="skilled" id="q4_2" value="2" />
+        </label>
+        <label for="q4_3">4<br />
+            <input type="radio" name="skilled" id="q4_3" value="3" />
+        </label>
+        <label for="q4_4">5<br />
+            <input type="radio" name="skilled" id="q4_4" value="4" />
+        </label>
+        <label for="q4_6">6<br />
+            <input type="radio" name="skilled" id="q4_6" value="5" />
+        </label>
+        <label for="q4_7">Very <br> 7<br />
+            <input type="radio" name="skilled" id="q4_7" value="6" />
+        </label>
+        <label for="q4_8">Does Not<br> Fit<br />
+            <input type="radio" name="skilled" id="q4_8" value="7" />
+        </label>
+    </div>
+
+      Someone you can count on
+    <div class="radioGroup">
+        <label for="q5_0">Not <br>at all <br>1<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_0" value="0" required/>
+        </label>
+        <label for="q5_1">2<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_1" value="1" />
+        </label>
+        <label for="q5_2">3<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_2" value="2" />
+        </label>
+        <label for="q5_3">4<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_3" value="3" />
+        </label>
+        <label for="q5_4">5<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_4" value="4" />
+        </label>
+        <label for="q5_6">6<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_6" value="5" />
+        </label>
+        <label for="q5_7">Very <br> 7<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_7" value="6" />
+        </label>
+        <label for="q5_8">Does Not<br> Fit<br />
+            <input type="radio" name="someone_you_can_count_on" id="q5_8" value="7" />
+        </label>
+    </div>
+
+    Competent
+    <div class="radioGroup">
+        <label for="q6_0">Not <br>at all <br>1<br />
+            <input type="radio" name="competent" id="q6_0" value="0" required/>
+        </label>
+        <label for="q6_1">2<br />
+            <input type="radio" name="competent" id="q6_1" value="1" />
+        </label>
+        <label for="q6_2">3<br />
+            <input type="radio" name="competent" id="q6_2" value="2" />
+        </label>
+        <label for="q6_3">4<br />
+            <input type="radio" name="competent" id="q6_3" value="3" />
+        </label>
+        <label for="q6_4">5<br />
+            <input type="radio" name="competent" id="q6_4" value="4" />
+        </label>
+        <label for="q6_6">6<br />
+            <input type="radio" name="competent" id="q6_6" value="5" />
+        </label>
+        <label for="q6_7">Very <br> 7<br />
+            <input type="radio" name="competent" id="q6_7" value="6" />
+        </label>
+        <label for="q6_8">Does Not<br> Fit<br />
+            <input type="radio" name="competent" id="q6_8" value="7" />
+        </label>
+    </div>
+
+      Consistent
+    <div class="radioGroup">
+        <label for="q7_0">Not <br>at all <br>1<br />
+            <input type="radio" name="consistent" id="q7_0" value="0" required/>
+        </label>
+        <label for="q7_1">2<br />
+            <input type="radio" name="consistent" id="q7_1" value="1" />
+        </label>
+        <label for="q7_2">3<br />
+            <input type="radio" name="consistent" id="q7_2" value="2" />
+        </label>
+        <label for="q7_3">4<br />
+            <input type="radio" name="consistent" id="q7_3" value="3" />
+        </label>
+        <label for="q7_4">5<br />
+            <input type="radio" name="consistent" id="q7_4" value="4" />
+        </label>
+        <label for="q7_6">6<br />
+            <input type="radio" name="consistent" id="q7_6" value="5" />
+        </label>
+        <label for="q7_7">Very <br> 7<br />
+            <input type="radio" name="consistent" id="q7_7" value="6" />
+        </label>
+        <label for="q7_8">Does Not<br> Fit<br />
+            <input type="radio" name="consistent" id="q7_8" value="7" />
+        </label>
+    </div>
+
+      Meticulous
+     <div class="radioGroup">
+        <label for="q8_0">Not <br>at all <br>1<br />
+            <input type="radio" name="meticulous" id="q8_0" value="0" required/>
+        </label>
+        <label for="q8_1">2<br />
+            <input type="radio" name="meticulous" id="q8_1" value="1" />
+        </label>
+        <label for="q8_2">3<br />
+            <input type="radio" name="meticulous" id="q8_2" value="2" />
+        </label>
+        <label for="q8_3">4<br />
+            <input type="radio" name="meticulous" id="q8_3" value="3" />
+        </label>
+        <label for="q8_4">5<br />
+            <input type="radio" name="meticulous" id="q8_4" value="4" />
+        </label>
+        <label for="q8_6">6<br />
+            <input type="radio" name="meticulous" id="q8_6" value="5" />
+        </label>
+        <label for="q8_7">Very <br> 7<br />
+            <input type="radio" name="meticulous" id="q8_7" value="6" />
+        </label>
+         <label for="q8_8">Does Not<br> Fit<br />
+            <input type="radio" name="meticulous" id="q8_8" value="7" />
+        </label>
+    </div>
+      <input type="submit" value="Submit">
+  </form>
+
+<style>
+   .radioGroup label {
+      display: inline-block;
+      margin: 0 0.2em;
+      text-align: center;
+      padding-bottom: 2%;
+      font-size: 15px;
+}
+
+#myform {
+        text-align: left;
+        padding-top: 5%;
+        font-size: 25px;
+}
+</style>
+
+{% endblock %}
