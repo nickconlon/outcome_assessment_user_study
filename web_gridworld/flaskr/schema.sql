@@ -36,7 +36,7 @@ CREATE TABLE results (
     run_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     tot_mission_time_s INTEGER NOT NULL,
     tot_mission_steps INTEGER NOT NULL,
-    score INTEGER NOT NULL,
+    score TEXT NOT NULL,
     path TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );

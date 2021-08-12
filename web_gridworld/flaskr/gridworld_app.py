@@ -177,7 +177,7 @@ def endgame():
             '(user_id, tot_mission_time_s, tot_mission_steps, path, map_number, accuracy_level, competency_level, report_level, confidence, score) '
             ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             (g.user['id'],  js['t_mission_time'], js['t_mission_steps'], str(js['path']), js['map_num'], js['accuracy'],
-             js['competency'], js['report'], js['conf'], score)
+             js['competency'], js['report'], js['conf'], str(score))
         )
         db.commit()
 
