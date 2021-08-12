@@ -10,7 +10,6 @@ CREATE TABLE user (
   first_trust TEXT,
   second_trust TEXT,
   third_trust TEXT,
-  open_question TEXT,
   base_quiz TEXT,
   quiz1 TEXT,
   quiz2 TEXT,
@@ -21,6 +20,7 @@ CREATE TABLE user (
   age TEXT,
   gender TEXT,
   education TEXT,
+  open_question TEXT,
   client_ip TEXT,
   password TEXT NOT NULL
 );
@@ -36,6 +36,7 @@ CREATE TABLE results (
     run_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     tot_mission_time_s INTEGER NOT NULL,
     tot_mission_steps INTEGER NOT NULL,
+    score INTEGER NOT NULL,
     path TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
