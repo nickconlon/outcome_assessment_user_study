@@ -161,15 +161,6 @@ def endgame():
         js = js['postData']
         print("RECEIVED :" + str(js))
 
-        db = get_db()
-        db.execute(
-            'INSERT INTO results '
-            '(user_id, tot_mission_time_s, tot_mission_steps, path, map_number, accuracy_level, competency_level, report_level, confidence) '
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            (g.user['id'],  js['t_mission_time'], js['t_mission_steps'], str(js['path']), js['map_num'], js['accuracy'],
-             js['competency'], js['report'], js['conf'])
-        )
-        db.commit()
         score = 5.0
         if js['outcome'] == 'ABORT':
             score -= 3.0
@@ -179,6 +170,16 @@ def endgame():
             score = 0.0
         if score <= 0.0:
             score = 0.0
+
+        db = get_db()
+        db.execute(
+            'INSERT INTO results '
+            '(user_id, tot_mission_time_s, tot_mission_steps, path, map_number, accuracy_level, competency_level, report_level, confidence, score) '
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            (g.user['id'],  js['t_mission_time'], js['t_mission_steps'], str(js['path']), js['map_num'], js['accuracy'],
+             js['competency'], js['report'], js['conf'], score)
+        )
+        db.commit()
 
         session['score'] = str(score)
         session['ctr'] = str(int(session['ctr']) + 1)
@@ -364,7 +365,7 @@ def quiz2():
 @bp.route('/quiz3', methods=('GET', 'POST'))
 @login_required
 def quiz3():
-    elements = ['info', 'false', 'manual', 'badConf', 'goodConf', 'fairConf']
+    elements = ['info', 'false', 'conf', 'badConf', 'goodConf', 'fairConf']
     response = ""
     for e in elements:
         response += request.form[e]
@@ -379,4 +380,3 @@ def quiz3():
 def end_study():
     session.clear()
     return redirect(url_for('end_study'))
-    #return render_template('gridworld_app/end_study.html', post={})
