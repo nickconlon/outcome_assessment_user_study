@@ -10,6 +10,8 @@ import os
 
 bp = Blueprint('gridworld_app', __name__)
 
+STUDY_VERSION = "1.0"
+
 MAPS_PER_LEVEL = 4
 MAX_MAPS_PER_LEVEL = 5
 NUM_LEVELS = 3
@@ -303,8 +305,8 @@ def base_tutorial():
 
     db = get_db()
     db.execute(
-        'UPDATE user SET accuracy=?, competency=?, code=?, client_ip=? WHERE id = ?',
-        (accuracy_level, competency_level, completion_code, client_ip, g.user['id'],))
+        'UPDATE user SET accuracy=?, competency=?, code=?, client_ip=?, study_version=? WHERE id = ?',
+        (accuracy_level, competency_level, completion_code, client_ip, STUDY_VERSION, g.user['id'],))
     db.commit()
     print("Setting up new participant:")
     print("  IP addr={}".format(client_ip))

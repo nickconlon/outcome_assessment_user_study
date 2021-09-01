@@ -22,6 +22,7 @@ CREATE TABLE user (
   education TEXT,
   open_question TEXT,
   client_ip TEXT,
+  study_version TEXT,
   password TEXT NOT NULL
 );
 
