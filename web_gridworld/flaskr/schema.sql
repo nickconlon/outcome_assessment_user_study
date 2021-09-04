@@ -23,6 +23,7 @@ CREATE TABLE user (
   open_question TEXT,
   client_ip TEXT,
   study_version TEXT,
+  level_order TEXT,
   password TEXT NOT NULL
 );
 

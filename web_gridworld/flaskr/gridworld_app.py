@@ -10,7 +10,10 @@ import os
 
 bp = Blueprint('gridworld_app', __name__)
 
-STUDY_VERSION = "1.0"
+STUDY_VERSION = "1.1"
+# V1->1.1: 
+#    adding field level_order in DB.results
+#    updating wording and fixing duplicate 7's in MDMT survey
 
 MAPS_PER_LEVEL = 4
 MAX_MAPS_PER_LEVEL = 5
@@ -305,8 +308,8 @@ def base_tutorial():
 
     db = get_db()
     db.execute(
-        'UPDATE user SET accuracy=?, competency=?, code=?, client_ip=?, study_version=? WHERE id = ?',
-        (accuracy_level, competency_level, completion_code, client_ip, STUDY_VERSION, g.user['id'],))
+        'UPDATE user SET accuracy=?, competency=?, code=?, client_ip=?, study_version=?, level_order=? WHERE id = ?',
+        (accuracy_level, competency_level, completion_code, client_ip, STUDY_VERSION, session['l_order'], g.user['id'],))
     db.commit()
     print("Setting up new participant:")
     print("  IP addr={}".format(client_ip))
