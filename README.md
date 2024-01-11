@@ -2,7 +2,7 @@
 
 This project is for a human subject study to evaluate the Outcome Assessment algorithm. We investigated how knowledge of robot competency impacts human decision-making when there is uncertainty about the state of the world and the robot's capabilities.
 
-The Outcome Assessment metric from Factorized Machine Self-Confidence enables an autonamous robot to understand its task competency. This project extends the following:
+The Outcome Assessment metric from Factorized Machine Self-Confidence enables an autonomous robot to understand its task competency. This project extends the following:
 
 [Machine Self-confidence in Autonomous Systems via Meta-analysis of Decision Processes](https://link.springer.com/chapter/10.1007/978-3-030-20454-9_21)
 
